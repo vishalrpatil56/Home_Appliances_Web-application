@@ -1,16 +1,15 @@
 import React from 'react'
 import Header1 from "./Header1"
-import { Outlet } from 'react-router-dom'
 import Footer from './Footer'
-import Home1 from './Home1'
+import { Outlet } from 'react-router-dom'
 
 function Layout() {
   return (
     <>
-    <Header1/>
-    <Home1/>
-    <Footer/>
-        </>
+      <Header1 />
+      <Outlet />   {/* THIS SHOWS PAGES */}
+      <Footer />
+    </>
   )
 }
 

@@ -1,0 +1,58 @@
+.product-page {
+  padding: 30px;
+  background: #f8f9fa;
+}
+
+/* main card */
+.product-container {
+  display: flex;
+  gap: 40px;
+  background: #fff;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+}
+
+/* LEFT */
+.left-section img {
+  width: 350px;
+  border-radius: 10px;
+}
+
+/* RIGHT */
+.right-section {
+  max-width: 500px;
+}
+
+.right-section h1 {
+  font-size: 24px;
+  font-weight: 600;
+}
+
+/* price same theme */
+.price {
+  color: #007bff;
+  margin: 10px 0;
+}
+
+/* description */
+.desc {
+  color: #555;
+  line-height: 1.7;
+}
+
+/* button matches your site */
+.btn {
+  margin-top: 20px;
+  background: #f5b400;
+  color: black;
+  padding: 12px 20px;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  border-radius: 6px;
+}
+
+.btn:hover {
+  background: #e0a800;
+}

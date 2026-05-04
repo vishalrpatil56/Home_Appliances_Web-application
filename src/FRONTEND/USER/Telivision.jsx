@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+
 const Telivision = () => {
   const navigate = useNavigate();
   const [ledProducts, setLedProducts] = useState([]);
@@ -75,45 +76,55 @@ const Telivision = () => {
                   borderRadius: "15px",
                   background: "#fff",
                   display: "inline-block",
+                  fontWeight: "bold",
                 }}
               >
-                LED:
+                  LED:
               </h4>
               <br />
               <br />
-              <div className="row row-cols-2 row-cols-md-2 g-4">
-                {ledProducts.map((product) => (
-                  <div
-                    key={product.product_id}
-                    className="card product-card shadow-sm h-100"
-                  >
-                    <img
-                      src={`http://localhost:5000/uploads/${product.product_image}`}
-                      className="card-img"
-                      alt={product.product_name}
-                      style={{ height: "275px" }}
-                    />{" "}
-                    <div className="card-body">
-                      <h5 className="card-title">
-                        {product.product_description}
-                      </h5>
-                      <div className="d-flex justify-content-start align-items-center mb-3">
-                        <span className="fs-2 fw-bold text-primary">
-                          ₹{product.product_price}
-                        </span>
-                      </div>
-                      <button
-                        className="btn btn-warning w-100 mt-auto"
-                        onClick={() => handleAddToCart(product)}
-                      >
-                        <AiOutlineShoppingCart size={20} /> Add to cart
-                      </button>
-                      <br />
-                      <br />
-                    </div>
-                  </div>
-                ))}
-              </div>
+              <div className="row">
+  {ledProducts.map((product) => (
+    <div
+      className="col-lg-3 col-md-4 col-sm-6 mb-4"
+      key={product.product_id}
+    >
+      <div
+        className="product-card"
+        onClick={() => navigate(`/product/${product.product_id}`)}
+        style={{ cursor: "pointer" }}
+      >
+        <img
+          src={`/Television/${product.product_image}`}
+          className="card-img"
+          alt={product.product_name}
+        />
+
+        <div className="p-2">
+          <p className="card-title">
+            {product.product_description}
+          </p>
+
+          <div>
+            <span className="fs-2">
+              ₹{product.product_price}
+            </span>
+          </div>
+
+          <button
+            className="btn btn-warning w-100 mt-2"
+            onClick={(e) => {
+              e.stopPropagation();
+              handleAddToCart(product);
+            }}
+          >
+            <AiOutlineShoppingCart size={20} /> Add to cart
+          </button>
+        </div>
+      </div>
+    </div>
+  ))}
+</div>
             </div>
           </div>
         </div>
@@ -124,64 +135,68 @@ const Telivision = () => {
         <div className="row justify-content-center">
           <div className="card-body">
             <div className="card shadow-lg p-4">
-              <h4
+             <h4
                 style={{
                   padding: "20px",
                   borderRadius: "15px",
                   background: "#fff",
                   display: "inline-block",
+                  fontWeight: "bold",
                 }}
               >
-                QLED:
+                  QLED:
               </h4>
               <br />
               <br />
-              <div className="row row-cols-2 row-cols-md-2 g-4">
-                {qledProducts.map((product) => (
-                  <div
-                    key={product.product_id}
-                    className="card product-card shadow-sm h-100"
-                  >
-                    <img
-                      src={`http://localhost:5000/uploads/${product.product_image}`}
-                      className="card-img"
-                      alt={product.product_name}
-                      style={{ height: "275px" }}
-                    />{" "}
-                    <div className="card-body">
-                      <h5 className="card-title">
-                        {product.product_description}
-                      </h5>
-                      <div className="d-flex justify-content-start align-items-center mb-3">
-                        <span className="fs-2 fw-bold text-primary">
-                          ₹{product.product_price}
-                        </span>
-                      </div>
-                      <button
-                        className="btn btn-warning w-100 mt-auto"
-                        onClick={() => handleAddToCart(product)}
-                      >
-                        <AiOutlineShoppingCart size={20} /> Add to cart
-                      </button>
-                      <br />
-                      <br />
-                    </div>
-                  </div>
-                ))}
-              </div>
+              <div className="row">
+  {qledProducts.map((product) => (
+    <div
+      className="col-lg-3 col-md-4 col-sm-6 mb-4"
+      key={product.product_id}
+    >
+      <div
+        className="product-card"
+        onClick={() => navigate(`/product/${product.product_id}`)}
+        style={{ cursor: "pointer" }}
+      >
+        <img
+          src={`/Television/${product.product_image}`}
+          className="card-img"
+          alt={product.product_name}
+        />
+
+        <div className="p-2">
+          <p className="card-title">
+            {product.product_description}
+          </p>
+
+          <div>
+            <span className="fs-2">
+              ₹{product.product_price}
+            </span>
+          </div>
+
+          <button
+            className="btn btn-warning w-100 mt-2"
+            onClick={(e) => {
+              e.stopPropagation();
+              handleAddToCart(product);
+            }}
+          >
+            <AiOutlineShoppingCart size={20} /> Add to cart
+          </button>
+        </div>
+      </div>
+    </div>
+  ))}
+</div>
             </div>
           </div>
         </div>
       </div>
 
       <ToastContainer />
-      <footer className="bg-black text-white text-center py-3">
-     <h4> <p>&copy; 2025 Home Appliance Service. All rights reserved.</p></h4>
-      <p>
-        <a href="/privacy" className="text-white">Privacy Policy</a> |{" "}
-        <a href="/terms" className="text-white">Terms of Service</a>
-      </p>
-    </footer>
+       <CusFooter />
     </>
   );
 };

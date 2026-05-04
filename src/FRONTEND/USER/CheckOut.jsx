@@ -1,179 +1,261 @@
 import React, { useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import CusFooter from "./CusFooter";
 import CusHeader from "./CusHeader";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import axios from "axios";
 
 const CheckOut = () => {
   const [cart, setCart] = useState([]);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
-    address: "",  
+    address: "",
     phone: "",
     paymentMethod: "",
-    cardNumber: "",
-    cvv: "",
   });
 
   const navigate = useNavigate();
 
+  // ✅ LOAD CART
   useEffect(() => {
     const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
     setCart(storedCart);
   }, []);
 
+  // ✅ TOTAL PRICE
   const getTotalPrice = () => {
     return cart.reduce((total, item) => total + item.price, 0);
   };
 
+  // ✅ INPUT CHANGE
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleCheckout = (e) => {
+  // ✅ ONLINE PAYMENT (RAZORPAY)
+  const handleOnlinePayment = async () => {
+    try {
+      const res = await axios.post(
+        "http://localhost:5000/api/payment/create-order",
+        {
+          amount: getTotalPrice(),
+        }
+      );
+
+      const options = {
+        key: "rzp_test_SgPSwKkrO0I17f",
+        amount: res.data.amount,
+        currency: "INR",
+        name: "Balaji Enterprises",
+        description: "Order Payment",
+        order_id: res.data.id,
+
+        handler: async function (response) {
+          try {
+            // ✅ SAVE ORDER TO DB (FIXED)
+            await axios.post("http://localhost:5000/place-order", {
+              customer_id: 1, // replace with logged user if available
+               products: cart.map(item => ({
+    product_id: item.product_id || item.id,
+    name: item.name,
+    price: item.price,
+    quantity: item.quantity || 1
+  })),
+  total_price: getTotalPrice(),
+
+              name: formData.name,
+              email: formData.email,
+              phone: formData.phone,
+              address: formData.address,
+            });
+
+            toast.success("Order placed successfully ✅");
+
+            localStorage.removeItem("cart");
+            setCart([]);
+
+            navigate("/orders");
+          } catch (error) {
+            console.log(error);
+            toast.error("Failed to save order");
+          }
+        },
+
+        prefill: {
+          name: formData.name || "Customer",
+          email: formData.email || "test@gmail.com",
+          contact: formData.phone || "9999999999",
+        },
+
+        theme: {
+          color: "#f37254",
+        },
+      };
+
+      const rzp = new window.Razorpay(options);
+      rzp.open();
+    } catch (error) {
+      console.log(error);
+      toast.error("Payment Failed");
+    }
+  };
+
+  // ✅ CHECKOUT
+  const handleCheckout = async (e) => {
     e.preventDefault();
 
-    if (!formData.name || !formData.email || !formData.address || !formData.phone || !formData.paymentMethod) {
-      toast.error("Please fill in all fields.", { position: "top-center" });
+    if (
+      !formData.name ||
+      !formData.email ||
+      !formData.address ||
+      !formData.phone ||
+      !formData.paymentMethod
+    ) {
+      toast.error("Please fill all fields");
       return;
     }
 
     if (!/^\d{10}$/.test(formData.phone)) {
-      toast.error("Please enter a valid 10-digit phone number.", { position: "top-center" });
+      toast.error("Enter valid phone number");
       return;
     }
 
-    if (formData.paymentMethod === "card") {
-      if (!/^[0-9]{16}$/.test(formData.cardNumber)) {
-        toast.error("Please enter a valid 16-digit card number.", { position: "top-center" });
-        return;
-      }
-      if (!/^[0-9]{3,4}$/.test(formData.cvv)) {
-        toast.error("Please enter a valid 3-4 digit CVV.", { position: "top-center" });
-        return;
-      }
+    if (cart.length === 0) {
+      toast.error("Cart is empty");
+      return;
     }
 
-    const newOrder = {
-      id: Date.now(),
-      customer: formData,
-      products: cart,
-      total: getTotalPrice(),
-      date: new Date().toLocaleString(),
-    };
+    // ✅ ONLINE PAYMENT
+    if (formData.paymentMethod === "online") {
+      await handleOnlinePayment();
+      return;
+    }
 
-    const orders = JSON.parse(localStorage.getItem("orders")) || [];
-    orders.push(newOrder);
-    localStorage.setItem("orders", JSON.stringify(orders));
+    // ✅ COD / CARD (DIRECT SAVE)
+    try {
+      await axios.post("http://localhost:5000/place-order", {
+        customer_id: 1,
+         products: cart.map(item => ({
+    product_id: item.product_id || item.id,
+    name: item.name,
+    price: item.price,
+    quantity: item.quantity || 1
+  })),
+  total_price: getTotalPrice(),
 
-    toast.success("Order placed successfully!", { position: "top-center" });
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        address: formData.address,
+      });
 
-    localStorage.removeItem("cart");
-    setCart([]);
-    navigate("/cushome");
+      toast.success("Order placed successfully ✅");
+
+      localStorage.removeItem("cart");
+      setCart([]);
+
+      navigate("/orders");
+    } catch (error) {
+      console.log(error);
+      toast.error("Order failed");
+    }
   };
 
   return (
     <>
       <CusHeader />
+
       <div className="container my-5">
         <h2 className="text-center mb-4">🛒 Checkout</h2>
 
         {cart.length === 0 ? (
-          <div className="alert alert-warning text-center">Your cart is empty. Add some products first! 😊</div>
+          <div className="alert alert-warning text-center">
+            Your cart is empty!
+          </div>
         ) : (
           <div className="row">
+            {/* LEFT */}
             <div className="col-lg-6">
-              <div className="card shadow-lg p-4">
-                <h4 className="mb-4">Customer Information</h4>
+              <div className="card p-4 shadow">
+                <h4>Customer Info</h4>
+
                 <form onSubmit={handleCheckout}>
-                  <input type="text" className="form-control mb-3" name="name" value={formData.name} onChange={handleChange} placeholder="Name" required />
-                  <input type="email" className="form-control mb-3" name="email" value={formData.email} onChange={handleChange} placeholder="Email" required />
-                  <input type="tel" className="form-control mb-3" name="phone" value={formData.phone} onChange={handleChange} pattern="[0-9]{10}" placeholder="Phone" required />
-                  <textarea className="form-control mb-3" name="address" value={formData.address} onChange={handleChange} placeholder="Address" rows="3" required />
-                  
-                  <h5>Payment Method</h5>
-                  <select className="form-control mb-3" name="paymentMethod" value={formData.paymentMethod} onChange={handleChange} required>
-                    <option value="">Select Payment Method</option>
-                    <option value="card">Credit/Debit Card</option>
+                  <input
+                    className="form-control mb-3"
+                    name="name"
+                    placeholder="Name"
+                    value={formData.name}
+                    onChange={handleChange}
+                  />
+
+                  <input
+                    className="form-control mb-3"
+                    name="email"
+                    placeholder="Email"
+                    value={formData.email}
+                    onChange={handleChange}
+                  />
+
+                  <input
+                    className="form-control mb-3"
+                    name="phone"
+                    placeholder="Phone"
+                    value={formData.phone}
+                    onChange={handleChange}
+                  />
+
+                  <textarea
+                    className="form-control mb-3"
+                    name="address"
+                    placeholder="Address"
+                    value={formData.address}
+                    onChange={handleChange}
+                  />
+
+                  <select
+                    className="form-control mb-3"
+                    name="paymentMethod"
+                    value={formData.paymentMethod}
+                    onChange={handleChange}
+                  >
+                    <option value="">Select Payment</option>
                     <option value="cod">Cash on Delivery</option>
+                    <option value="card">Card</option>
+                    <option value="online">Online Payment</option>
                   </select>
-                  
-                  {formData.paymentMethod === "card" && (
-  <>
-    <div className="mb-3">
-      <label htmlFor="cardNumber" className="form-label">Card Number</label>
-      <input
-        type="text"
-        className="form-control"
-        id="cardNumber"
-        name="cardNumber"
-        value={formData.cardNumber}
-        onChange={handleChange}
-        pattern="^[0-9]{16}$"
-        maxLength="16"
-        placeholder="Enter a 16-digit card number (no spaces)"
-        required
-        onInvalid={(e) => e.target.setCustomValidity("Card number must be exactly 16 digits without spaces.")}
-        onInput={(e) => e.target.setCustomValidity("")}
-      />
-    </div>
 
-    <div className="mb-3">
-      <label htmlFor="cvv" className="form-label">CVV</label>
-      <input
-        type="text"
-        className="form-control"
-        id="cvv"
-        name="cvv"
-        value={formData.cvv}
-        onChange={handleChange}
-        pattern="^[0-9]{3,4}$"
-        maxLength="4"
-        placeholder="Enter a 3 or 4-digit CVV"
-        required
-        onInvalid={(e) => e.target.setCustomValidity("CVV must be 3 digits (Visa/MasterCard) or 4 digits (AMEX).")}
-        onInput={(e) => e.target.setCustomValidity("")}
-      />
-    </div>
-  </>
-)}
-
-                  <button type="submit" className="btn btn-success w-100">Place Order</button>
+                  {/* ✅ FIXED BUTTON */}
+                  <button type="submit" className="btn btn-success">
+                    Place Order
+                  </button>
                 </form>
               </div>
             </div>
 
+            {/* RIGHT */}
             <div className="col-lg-6">
-              <div className="card shadow-lg p-4">
-                <h4 className="mb-4">Order Summary</h4>
-                <ul className="list-group">
-                  {cart.map((item, index) => (
-                    <li key={index} className="list-group-item d-flex justify-content-between align-items-center">
-                      <div>
-                        <strong>{item.name}</strong>
-                        <br />
-                        <small className="text-muted">₹{item.price.toLocaleString()}</small>
-                      </div>
-                      <span className="text-success">₹{item.price.toLocaleString()}</span>
-                    </li>
-                  ))}
-                </ul>
-                <div className="mt-4">
-                  <h5>Total: <span className="text-primary">₹{getTotalPrice().toLocaleString()}</span></h5>
-                </div>
+              <div className="card p-4 shadow">
+                <h4>Order Summary</h4>
+
+                {cart.map((item, i) => (
+                  <div key={i} className="d-flex justify-content-between">
+                    <span>{item.name}</span>
+                    <span>₹{item.price}</span>
+                  </div>
+                ))}
+
+                <hr />
+                <h5>Total: ₹{getTotalPrice()}</h5>
               </div>
             </div>
           </div>
         )}
       </div>
+
       <ToastContainer />
-    
-     
     </>
   );
 };

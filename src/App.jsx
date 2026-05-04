@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+
 import {
   Routes,
   Route,
@@ -8,6 +9,10 @@ import {
   createBrowserRouter,
   createRoutesFromElements,
 } from "react-router-dom";
+
+
+
+
 
 import Header from "./FRONTEND/ADMIN/Header";
 
@@ -39,6 +44,7 @@ import Feedback from "./FRONTEND/SERVICEPROVIDER/Feedback";
 import ProductOrder from "./FRONTEND/SERVICEPROVIDER/ProductOrder";
 import ServiceRequest from "./FRONTEND/SERVICEPROVIDER/ServiceRequest";
 
+
 // user paths
 
 import CusHeader from "./FRONTEND/USER/CusHeader";
@@ -65,6 +71,9 @@ import Cuscomplain from "./FRONTEND/USER/cuscomplain";
 import CustomerFeedbackList from "./FRONTEND/USER/FeedbackList";
 import CustomercompalainList from "./FRONTEND/USER/CompainList";
 import CustomerComplaintList from "./FRONTEND/USER/CompainList";
+import WaterPurifier from "./FRONTEND/USER/WaterPurifier";
+import UserProductDetails from "./FRONTEND/USER/UserProductDetails";
+
 function App() {
   const [count, setCount] = useState(0);
 
@@ -90,27 +99,29 @@ function App() {
         <Route path="/complainlist" element={<ComplainList />} />
         <Route path="/feedbacklist" element={<FeedbackList />} />
         {/* private route for authentication  */}
-        <Route
-          path="/serviceproviderdash"
-          element={<PrivateRoute element={<Layout />} />}
-        />
+        
+       <Route path="/serviceproviderdash" element={<Layout />}>
+          <Route index element={<Home1 />} />
 
-        <Route path="serviceproviderdash" element={<Home1 />} />
+          <Route path="productdetails" element={<ProductDetails />} />
+          <Route path="customerorders" element={<Mainorders />} />
+          <Route path="serviceprovidercomplain" element={<SerComplain />} />
+          <Route path="serviceproviderfeedback" element={<SerFeedback />} />
+        </Route>
+
+        
         {/* <Route path="serviceprovider" element={<ServiceProvider />} /> */}
         <Route path="customer" element={<Customer />} />
         <Route path="catagory" element={<Catagory />} />
-        <Route path="productdetails" element={<ProductDetails />} />
         <Route path="productorder" element={<ProductOrder />} />
         <Route path="servicerequest" element={<ServiceRequest />} />
         <Route path="loginpage" element={<LoginPage1 />} />
         <Route path="registrationpage" element={<RegistrationPage />} />
         <Route path="forgot-password" element={<ForgotPassword />} />
-
+        
         <Route path="subcatagory" element={<Subcatagory />} />
         <Route path="complain" element={<Complain />} />
-        <Route path="serviceprovidercomplain" element={<SerComplain />} />
-        <Route path="customerorders" element={<Mainorders />} />
-        <Route path="serviceproviderfeedback" element={<SerFeedback />} />
+      
 
         
         {/* user path */}
@@ -119,11 +130,12 @@ function App() {
         <Route path="cushome" element={<CusHome />} />
         <Route path="cusfooter" element={<CusFooter />} />
         <Route path="/" element={<CusLayout />} />
+        <Route path="/product/:id" element={<UserProductDetails />} />
 
         <Route path="washing" element={<WashingM />} />
         <Route path="aircon" element={<AirCon />} />
         <Route path="fridge" element={<Fridge />} />
-
+        <Route path="/waterpurifier" element={<WaterPurifier />} />
         <Route path="telivision" element={<Telivision />} />
         <Route path="cart" element={<CartPage />} />
         <Route path="checkout" element={<CheckOut />} />
@@ -137,8 +149,15 @@ function App() {
 
         <Route path="customercompaints" element={<CustomerComplaintList />} />
       </Routes>
-      <toast/>
-      <ToastContainer position="top-right" autoClose={2000} hideProgressBar={false} />
+      <ToastContainer
+        position="top-center"
+        autoClose={2000}
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick
+        pauseOnHover
+        theme="light"
+      />
     </>
   );
 }

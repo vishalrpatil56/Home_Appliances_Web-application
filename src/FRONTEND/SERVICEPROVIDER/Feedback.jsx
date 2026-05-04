@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { toast } from "react-toastify";
 import { Button, Form, Container, Alert } from 'react-bootstrap';
 
 const Feedback = () => {
@@ -25,6 +26,7 @@ const Feedback = () => {
 
     // Set the form as submitted
     setIsSubmitted(true);
+    toast.success("Feedback submitted successfully!");
 
     // Reset form fields
     setName('');
@@ -46,12 +48,7 @@ const Feedback = () => {
       <div className="card p-4 shadow" style={{ width: '400px', borderRadius: '10px', backgroundColor: '#fff' }}>
       <h2 className="mb-4">Submit Your Feedback</h2>
 
-      {/* Success message after form submission */}
-      {isSubmitted && (
-        <Alert variant="success">
-          Your feedback has been submitted successfully. Thank you!
-        </Alert>
-      )}
+    
 
       {/* Feedback Form */}
       <Form onSubmit={handleSubmit}>

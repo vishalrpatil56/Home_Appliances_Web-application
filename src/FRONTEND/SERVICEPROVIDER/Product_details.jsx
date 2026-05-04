@@ -1,242 +1,213 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { toast } from "react-toastify";
 import "bootstrap/dist/css/bootstrap.min.css";
-import Header1 from "./Header1";
 
 
 const ProductDetails = () => {
-    const today = new Date().toISOString().split('T')[0];
-    
-    const [formData, setFormData] = useState({
-        productName: "",
-        category: "",
-        subCategory: "",
-        description: "",
-        price: "",
-        quantity: "",
-        image: null,
-        brand: "",
-        date: "",
-    });
-    
-    const [subCategories, setSubCategories] = useState([]);
+  const [categories, setCategories] = useState([]);
+const [subCategories, setSubCategories] = useState([]);
 
-    const handleChange = (e) => {
-        const { name, value, files } = e.target;
-        setFormData((prev) => ({
-            ...prev,
-            [name]: files ? files[0] : value,
-        }));
+const [formData, setFormData] = useState({
+  name: "",
+  description: "",
+  long_description: "",
+  price: "",
+  category_id: "",
+  subcategory_id: "",
+  image: null,
+});
 
-        if (name === "category") {
-            updateSubCategories(value);
-        }
-    };
-    const updateSubCategories = (category) => {
-        switch (category) {
-            case "Television":
-                setSubCategories(["LED", "QLED"]);
-                break;
-            case "Refrigerator":
-                setSubCategories(["Double Door", "Single Door", "Tripple Door", "Side-by-side Door"]);
-                break;
-            case "Washing Machine":
-                setSubCategories(["Top Load", "Front Load"]);
-                break;
-            case "Air Conditioners":
-                setSubCategories(["Window AC", "Split AC"]);
-                break;
-            default:
-                setSubCategories([]);
-                break;
-        }
-        setFormData((prev) => ({ ...prev, subCategory: "" }));
-    };
+  const [searchId, setSearchId] = useState("");
+  const [product, setProduct] = useState(null);
+  const [newPrice, setNewPrice] = useState("");
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+  // Load categories
+  useEffect(() => {
+    axios.get("http://localhost:5000/categories")
+      .then(res => setCategories(res.data))
+      .catch(err => console.log(err));
+  }, []);
 
-        const formDataToSend = new FormData();
-        formDataToSend.append("productName", formData.productName);
-        formDataToSend.append("description", formData.description);
-        formDataToSend.append("price", formData.price);
-        formDataToSend.append("quantity", formData.quantity);
-        formDataToSend.append("brand", formData.brand);
-        if (formData.image) {
-            formDataToSend.append("image", formData.image);
-        }
-        formDataToSend.append("subCategory", formData.subCategory); // Send subCategory name
+  // Handle input
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
-        try {
-            const response = await axios.post("http://localhost:5000/add-product",formDataToSend,{ headers: { "Content-Type": "multipart/form-data" } });
+  const handleFile = (e) => {
+    setFormData({ ...formData, image: e.target.files[0] });
+  };
 
-            if (response.status === 200) {
-                alert("Product added successfully!");
-                setFormData({
-                    productName: "",
-                    category: "",
-                    subCategory: "",
-                    description: "",
-                    price: "",
-                    quantity: "",
-                    image: "",
-                    brand: "",
-                    date: "",
-                });
-                setSubCategories([]);
-            } else {
-                alert("Failed to add product");
-            }
-        } catch (error) {
-            console.error("Error:", error);
-            alert("Error adding product");
-        }
-    };
+  // Category change
+ const handleCategoryChange = async (e) => {
+  const categoryId = e.target.value;
 
-    return (
-        <>
-            <Header1 />
-            <div className="container mt-5">
-                <div className="card shadow-lg p-5">
-                    <div className="row">
-                        <div className="col-md-5 d-flex align-items-center justify-content-center">
-                            <img
-                                src="home.png"
-                                alt="Home Appliances"
-                                className="img-fluid"
-                                style={{ maxWidth: "100%", height: "auto" }}
-                            />
-                        </div>
+  // 🚨 STOP if empty
+  if (!categoryId) return;
 
-                        <div className="col-md-7">
-                            <h3 className="text-center mb-4">PRODUCT DETAILS</h3>
+  setFormData({
+    ...formData,
+    category_id: categoryId,
+    subcategory_id: ""
+  });
 
-                            <form onSubmit={handleSubmit}>
-                                <div className="mb-3">
-                                    <input
-                                        type="text"
-                                        className="form-control"
-                                        name="productName"
-                                        placeholder="Enter product Name"
-                                        value={formData.productName}
-                                        onChange={handleChange}
-                                        required
-                                    />
-                                </div>
-
-                                <div className="mb-3">
-                                    <select
-                                        className="form-select"
-                                        name="category"
-                                        value={formData.category}
-                                        onChange={handleChange}
-                                        required
-                                    >
-                                        <option value="">Select Product Category</option>
-                                        <option value="Television">Television</option>
-                                        <option value="Refrigerator">Refrigerator</option>
-                                        <option value="Washing Machine">Washing Machine</option>
-                                        <option value="Air Conditioners">Air Conditioners</option>
-                                    </select>
-                                </div>
-
-                                <div className="mb-3">
-                                    <select
-                                        className="form-select"
-                                        name="subCategory"
-                                        value={formData.subCategory}
-                                        onChange={handleChange}
-                                        required
-                                    >
-                                        <option value="">Select Product Sub Category</option>
-                                        {subCategories.map((subCategory) => (
-                                            <option key={subCategory} value={subCategory}>
-                                                {subCategory}
-                                            </option>
-                                        ))}
-                                    </select>
-                                </div>
-
-                                <div className="mb-3">
-                                    <textarea
-                                        className="form-control"
-                                        name="description"
-                                        placeholder="Enter product Description"
-                                        value={formData.description}
-                                        onChange={handleChange}
-                                        rows="3"
-                                        required
-                                    />
-                                </div>
-
-                                <div className="mb-3 d-flex gap-3">
-                                    <input
-                                        type="number"
-                                        className="form-control"
-                                        name="price"
-                                        placeholder="Enter product Price"
-                                        value={formData.price}
-                                        onChange={handleChange}
-                                        required
-                                    />
-                                    <input
-                                        type="number"
-                                        className="form-control"
-                                        name="quantity"
-                                        placeholder="Enter product quantity"
-                                        value={formData.quantity}
-                                        onChange={handleChange}
-                                        required
-                                    />
-                                </div>
-
-                                <div className="mb-3">
-                                    <input
-                                        type="file"
-                                        className="form-control"
-                                        name="image"
-                                        onChange={handleChange}
-                                        required
-                                    />
-                                </div>
-
-                                <div className="mb-3">
-                                    <input
-                                        type="text"
-                                        className="form-control"
-                                        name="brand"
-                                        placeholder="Enter product Brand Name"
-                                        value={formData.brand}
-                                        onChange={handleChange}
-                                        required
-                                    />
-                                </div>
-
-                                <div className="mb-3">
-                                    <input
-                                        type="date"
-                                        className="form-control"
-                                        name="date"
-                                        value={formData.date}
-                                        onChange={handleChange}
-                                        required
-                                        max={today} // Set the maximum allowed date to today
-                                    />
-                                </div>
-
-                                <div className="text-center">
-                                    <button type="submit" className="btn btn-primary w-100">
-                                        Insert
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-        </>
+  try {
+    const res = await axios.get(
+      `http://localhost:5000/categories/${categoryId}/subcategories`
     );
+    setSubCategories(res.data);
+  } catch (err) {
+    console.error(err);
+  }
 };
 
-export default ProductDetails;
+  // ADD PRODUCT
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const data = new FormData();
+    data.append("name", formData.name);
+    data.append("description", formData.description);
+    data.append("long_description", formData.long_description);
+    data.append("price", formData.price);
+    data.append("subcategory_id", formData.subcategory_id);
+    data.append("image", formData.image);
+
+    try {
+      await axios.post("http://localhost:5000/add-product", data);
+      toast.success("Product added successfully!");
+    } catch (err) {
+      toast.error("Error adding product");
+    }
+  };
+
+  // SEARCH PRODUCT
+  const searchProduct = async () => {
+    try {
+      const res = await axios.get(
+        `http://localhost:5000/api/product/${searchId}`
+      );
+      setProduct(res.data);
+    } catch {
+      toast.error("Product not found");
+    }
+  };
+
+  // UPDATE PRICE
+  const updatePrice = async () => {
+    await axios.put(
+      `http://localhost:5000/api/update-product-price/${searchId}`,
+      { price: newPrice }
+    );
+    toast.info("Price updated successfully!");
+    searchProduct();
+  };
+
+  // DELETE PRODUCT
+  const deleteProduct = async () => {
+    await axios.delete(
+      `http://localhost:5000/api/delete-product/${searchId}`
+    );
+    toast.error("Product deleted successfully!");
+    setProduct(null);
+  };
+
+  return (
+    <div className="container mt-5">
+
+      {/* ADD PRODUCT */}
+      <div className="card p-4 mb-4">
+        <h3>Add Product</h3>
+
+        <form onSubmit={handleSubmit}>
+          <input className="form-control mb-2" name="name" placeholder="Name" onChange={handleChange} required />
+
+          <select
+            className="form-control mb-2"
+            onChange={handleCategoryChange}
+            value={formData.category_id}
+          >
+            <option value="">Select Category</option>
+
+            {categories.map((cat) => (
+              <option
+                key={cat.p_cata_id}           
+                value={cat.p_cata_id}           
+              >
+                {cat.p_cata_name}              
+              </option>
+            ))}
+          </select>
+
+          <select
+  className="form-control mb-2"
+  name="subcategory_id"
+  value={formData.subcategory_id}
+  onChange={handleChange}
+>
+  <option value="">Select Subcategory</option>
+
+  {subCategories.map((sub) => (
+    <option
+      key={sub.p_sub_cata_id}
+      value={sub.p_sub_cata_id}
+    >
+      {sub.p_sub_cata_name}
+    </option>
+  ))}
+</select>
+
+          <textarea className="form-control mb-2" name="description" placeholder="Short Description" onChange={handleChange} />
+
+          <textarea className="form-control mb-2" name="long_description" placeholder="Long Description" onChange={handleChange} />
+
+          <input className="form-control mb-2" type="number" name="price" placeholder="Price" onChange={handleChange} />
+
+          <input className="form-control mb-2" type="file" onChange={handleFile} />
+
+          <button className="btn btn-success">Add Product</button>
+        </form>
+      </div>
+
+      {/* MANAGE PRODUCT */}
+      <div className="card p-4">
+        <h3>Manage Product</h3>
+
+        <input
+          className="form-control mb-2"
+          placeholder="Enter Product ID"
+          value={searchId}
+          onChange={(e) => setSearchId(e.target.value)}
+        />
+
+        <button className="btn btn-primary mb-2" onClick={searchProduct}>
+          Search
+        </button>
+
+        {product && (
+          <>
+            <p><b>{product.product_name}</b></p>
+            <p>₹{product.product_price}</p>
+
+            <input
+              className="form-control mb-2"
+              placeholder="New Price"
+              onChange={(e) => setNewPrice(e.target.value)}
+            />
+
+            <button className="btn btn-warning me-2" onClick={updatePrice}>
+              Update Price
+            </button>
+
+            <button className="btn btn-danger" onClick={deleteProduct}>
+              Delete
+            </button>
+          </>
+        )}
+      </div>
+
+    </div>
+  );
+};
+
+export default ProductDetails;

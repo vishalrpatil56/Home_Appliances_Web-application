@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
+import axios from "axios";
 import { Button, Form, Container, Alert } from 'react-bootstrap';
+import { toast } from "react-toastify";
 
 const Complain = () => {
   const [complaint, setComplaint] = useState('');
@@ -16,20 +18,29 @@ const Complain = () => {
   };
 
   // Handle form submission
-  const handleSubmit = (e) => {
-    e.preventDefault();
+ const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    // Log complaint details (you can replace this with API call)
-    console.log('Complaint Submitted:', { name, email, complaint });
+  try {
+    const response = await axios.post("http://localhost:5000/api/complaint", {
+      complain_text: complaint
+    });
 
-    // Show success message
+    console.log("SUCCESS:", response.data);
+
     setIsSubmitted(true);
+    toast.success("Complaint submitted successfully!");
 
     // Reset form
     setName('');
     setEmail('');
     setComplaint('');
-  };
+
+  } catch (error) {
+    console.log("ERROR:", error.response);
+    toast.error("Failed to submit complaint");
+  }
+};
 
   return (
     
@@ -46,12 +57,7 @@ const Complain = () => {
       <div className="card p-4 shadow" style={{ width: '400px', borderRadius: '10px', backgroundColor: '#fff' }}>
       <h2 className="mb-4">Submit Your Complaint</h2>
 
-      {/* Success Alert */}
-      {isSubmitted && (
-        <Alert variant="success">
-          Your complaint has been submitted successfully. We will review it shortly.
-        </Alert>
-      )}
+     
 
       {/* Complaint Form */}
       <Form onSubmit={handleSubmit}>

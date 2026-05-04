@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "./Style/Loginpage.css";
+import { toast } from "react-toastify";
 import { useNavigate, Link } from "react-router-dom";
 import Header1 from "./Header1";
 
@@ -13,7 +14,7 @@ const Serviceproviderlogin = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!email || !password) {
-      setError("Please enter both email and password.");
+      toast.error("Please enter both email and password.");
       return;
     }
     setError("");
@@ -27,6 +28,7 @@ const Serviceproviderlogin = () => {
 
       const data = await res.json();
       if (data.success) {
+        toast.success("Login successful!");
         // Store token, userType, and serviceprovider_id in localStorage
         localStorage.setItem("authToken", data.token);
         localStorage.setItem("userType", "serviceProvider");
@@ -34,10 +36,10 @@ const Serviceproviderlogin = () => {
         
         navigate("/serviceproviderdash");
       } else {
-        alert("Invalid credentials. Please try again.");
+        toast.error("Invalid credentials. Please try again.");
       }
     } catch (err) {
-      setError("Login unsuccessful. Please try again.");
+      toast.error("Login unsuccessful. Please try again.");
       setEmail("");
       setPassword("");
       console.error(err);
@@ -69,7 +71,7 @@ const Serviceproviderlogin = () => {
       <div className="center-container">
         <div className="login-card" style={{height:"500px"}}>
           <h1 className="title">Login</h1>
-          {error && <div className="error">{error}</div>}
+          
           <form onSubmit={handleSubmit}>
             <div className="form-group">
               <label>Email</label>

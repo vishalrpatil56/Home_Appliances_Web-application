@@ -1,145 +1,223 @@
 import React from "react";
-import { PDFDownloadLink, Document, Page, Text, View, StyleSheet } from "@react-pdf/renderer";
+import {
+  PDFDownloadLink,
+  Document,
+  Page,
+  Text,
+  View,
+  StyleSheet,
+  Image,
+  Font,
+} from "@react-pdf/renderer";
 
-// Define styles
+// ✅ Local Font
+import Roboto from "../../fonts/Roboto-Regular.ttf";
+
+Font.register({
+  family: "Roboto",
+  src: Roboto,
+});
+
 const styles = StyleSheet.create({
   page: {
     padding: 30,
-    fontSize: 12,
-    fontFamily: "Helvetica",
-    backgroundColor: "#f4f4f4", // Adding background color
+    fontSize: 11,
+    fontFamily: "Roboto",
   },
+
   header: {
-    fontSize: 24,
-    textAlign: "center",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginBottom: 20,
-    color: "#2E86C1", // Header color
-    fontWeight: "bold",
-  },
-  subHeader: {
-    fontSize: 14,
-    textAlign: "center",
-    marginBottom: 20,
-    color: "#555",
-    fontStyle: "italic",
-  },
-  date: {
-    fontSize: 10,
-    textAlign: "right",
-    marginBottom: 20,
-    color: "#888",
-  },
-  section: {
-    marginBottom: 20,
-    paddingBottom: 15,
-    borderBottom: "1px solid #ddd", // Lighter border
-  },
-  orderTitle: {
-    fontSize: 16,
-    marginBottom: 10,
-    color: "#34495E",
-    fontWeight: "bold", // Order ID section with bold
-  },
-  text: {
-    marginBottom: 6,
-    fontSize: 12,
-  },
-  bold: {
-    fontWeight: "bold",
-  },
-  productList: {
-    marginLeft: 15,
-    marginBottom: 10,
-  },
-  productItem: {
-    marginBottom: 5,
-    fontSize: 12,
-    color: "#555",
-  },
-  total: {
-    textAlign: "right",
-    marginTop: 10,
-    fontSize: 14,
-    color: "#27AE60",
-    fontWeight: "bold", // Total price in bold
-  },
-  invoiceNumber: {
-    fontSize: 12,
-    color: "#555",
-    marginTop: 10,
-    marginBottom: 10,
-    fontStyle: "italic", // Invoice number styled differently
-  },
-  line: {
     borderBottom: "2px solid #2E86C1",
-    margin: "20px 0",
+    paddingBottom: 10,
   },
+
+  company: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "#1F4E79",
+  },
+
+  gst: {
+    fontSize: 10,
+    color: "#555",
+  },
+
+  title: {
+    fontSize: 20,
+    fontWeight: "bold",
+  },
+
+  section: {
+    marginBottom: 15,
+  },
+
+  rowBetween: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+
+  table: {
+    border: "1px solid #ccc",
+    marginTop: 10,
+  },
+
+  row: {
+    flexDirection: "row",
+    borderBottom: "1px solid #ccc",
+  },
+
+  headerRow: {
+    backgroundColor: "#f2f2f2",
+    fontWeight: "bold",
+  },
+
+  cell: {
+    flex: 1,
+    padding: 6,
+  },
+
+  totalSection: {
+    marginTop: 15,
+    alignItems: "flex-end",
+  },
+
+  total: {
+    fontSize: 14,
+    fontWeight: "bold",
+    color: "#27AE60",
+  },
+
+  signature: {
+    marginTop: 40,
+    textAlign: "right",
+  },
+
   footer: {
+    marginTop: 30,
     textAlign: "center",
     fontSize: 10,
     color: "#888",
-    marginTop: 30,
-  },
-  footerLink: {
-    color: "#2E86C1",
-    textDecoration: "none",
   },
 });
 
-const OrdersPDF = ({ orders }) => (
-  <Document>
-    <Page size="A4" style={styles.page}>
-      {/* Header Section */}
-      <Text style={styles.header}>Customer Orders Report</Text>
-      <Text style={styles.subHeader}>Invoice</Text>
-      <Text style={styles.date}>Generated on: {new Date().toLocaleDateString()}</Text>
+const OrdersPDF = ({ order }) => {
+  if (!order) return null;
 
-      {/* Orders List */}
-      {orders.map((order, index) => (
-        <View key={index} style={styles.section}>
-          <Text style={styles.orderTitle}>Order ID: {order.id}</Text>
-          <Text style={styles.invoiceNumber}>Invoice No: {order.id}</Text>
-          <Text style={styles.text}><span style={styles.bold}>Date:</span> {order.date}</Text>
-          <Text style={styles.text}><span style={styles.bold}>Customer Name:</span> {order.customer.name}</Text>
-          <Text style={styles.text}><span style={styles.bold}>Email:</span> {order.customer.email}</Text>
-          <Text style={styles.text}><span style={styles.bold}>Phone:</span> {order.customer.phone}</Text>
-          <Text style={styles.text}><span style={styles.bold}>Address:</span> {order.customer.address}</Text>
+  const subtotal = order.total;
+  const gst = subtotal * 0.18;
+  const cgst = gst / 2;
+  const sgst = gst / 2;
+  const grandTotal = subtotal + gst;
 
-          <Text style={[styles.text, styles.bold, { marginTop: 10 }]}>Products:</Text>
-          <View style={styles.productList}>
-            {order.products.map((product, idx) => (
-              <Text key={idx} style={styles.productItem}>
-                • {product.name} - ₹{product.price.toLocaleString()}
-              </Text>
-            ))}
+  return (
+    <Document>
+      <Page size="A4" style={styles.page}>
+
+        {/* ✅ HEADER */}
+        <View style={styles.header}>
+          
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            
+            {/* LOGO */}
+            <Image
+              src="/Untitled design.jpeg"
+              style={{
+                width: 80,
+                height: 50,
+                objectFit: "contain",
+                marginRight: 10,
+              }}
+            />
+
+            <View>
+              <Text style={styles.company}>Balaji Enterprise</Text>
+              <Text style={styles.gst}>GSTIN: 27ABCDE1234F1Z5</Text>
+              <Text>Nippani, Karnataka</Text>
+            </View>
+
           </View>
 
-          <Text style={styles.line}></Text> {/* Line for separation */}
-
-          <Text style={styles.total}>Total: ₹{order.total.toLocaleString()}</Text>
+          <Text style={styles.title}>INVOICE</Text>
         </View>
-      ))}
 
-      {/* Footer */}
-      <View style={styles.footer}>
-        <Text>
-          <a href="/privacy" style={styles.footerLink}>Privacy Policy</a> |{" "}
-          <a href="/terms" style={styles.footerLink}>Terms of Service</a>
+        {/* ORDER INFO */}
+        <View style={styles.rowBetween}>
+          <Text>Invoice No: INV-{order.id}</Text>
+          <Text>Date: {order.date}</Text>
+        </View>
+
+        {/* CUSTOMER */}
+        <View style={styles.section}>
+          <Text style={{ fontWeight: "bold" }}>Bill To:</Text>
+          <Text>{order.customer?.name}</Text>
+          <Text>{order.customer?.email}</Text>
+          <Text>{order.customer?.phone}</Text>
+          <Text>{order.customer?.address}</Text>
+        </View>
+
+        {/* TABLE */}
+        <View style={styles.table}>
+          <View style={[styles.row, styles.headerRow]}>
+            <Text style={styles.cell}>Product</Text>
+            <Text style={styles.cell}>Qty</Text>
+            <Text style={styles.cell}>Price</Text>
+            <Text style={styles.cell}>Total</Text>
+          </View>
+
+          {order.products?.map((p, i) => (
+            <View style={styles.row} key={i}>
+              <Text style={styles.cell}>{p.name}</Text>
+              <Text style={styles.cell}>1</Text>
+              <Text style={styles.cell}>
+                {`₹ ${p.price.toLocaleString("en-IN")}`}
+              </Text>
+              <Text style={styles.cell}>
+                {`₹ ${p.price.toLocaleString("en-IN")}`}
+              </Text>
+            </View>
+          ))}
+        </View>
+
+        {/* TOTAL */}
+        <View style={styles.totalSection}>
+          <Text>{`Subtotal: ₹ ${subtotal.toLocaleString("en-IN")}`}</Text>
+          <Text>{`CGST (9%): ₹ ${cgst.toLocaleString("en-IN")}`}</Text>
+          <Text>{`SGST (9%): ₹ ${sgst.toLocaleString("en-IN")}`}</Text>
+          <Text style={styles.total}>
+            {`Grand Total: ₹ ${grandTotal.toLocaleString("en-IN")}`}
+          </Text>
+        </View>
+
+        {/* SIGNATURE */}
+        <View style={styles.signature}>
+          <Text>Authorized Signature</Text>
+        </View>
+
+        {/* FOOTER */}
+        <Text style={styles.footer}>
+          Thank you for your business 
         </Text>
-        <Text>&copy; 2025 Home Appliance Service. All rights reserved.</Text>
-      </View>
-    </Page>
-  </Document>
-);
 
-const DownloadReport = ({ filteredOrders }) => (
-  <PDFDownloadLink
-    document={<OrdersPDF orders={filteredOrders} />}
-    fileName="CustomerOrdersReport.pdf"
-    className="btn btn-success fw-bold"
-  >
-    📄 Download PDF Report
-  </PDFDownloadLink>
-);
+      </Page>
+    </Document>
+  );
+};
 
-export default DownloadReport;
+const DownloadInvoice = ({ order }) => {
+  if (!order) return null;
+
+  return (
+    <PDFDownloadLink
+      document={<OrdersPDF order={order} />}
+      fileName={`Invoice_${order.id}.pdf`}
+      className="btn btn-success"
+    >
+      {({ loading }) => (loading ? "Generating..." : "Download Invoice")}
+    </PDFDownloadLink>
+  );
+};
+
+export default DownloadInvoice;

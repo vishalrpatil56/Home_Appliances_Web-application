@@ -7,11 +7,19 @@ const bcrypt = require("bcrypt");
  const path = require('path');
 const app = express();
 const bodyParser = require('body-parser');
-
+const productRoutes = require("./productRoutes");
+const sendOrderEmail = require("./sendEmail");
 app.use(cors());
 app.use(express.json());
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use("/api/product", productRoutes);
 
+
+//----------------------------online payment API--------------------------
+
+const paymentRoutes = require("./payment");
+
+app.use("/api/payment", paymentRoutes);
 
 
 // MySQL Connection
@@ -111,8 +119,8 @@ app.post("/submit-serviceprovidercomplaint", (req, res) => {
     return res.status(400).json({ error: "Complaint Description is required" });
   }
 
-  // Insert complaint into the database
-  const query = "INSERT INTO complain (serviceprovider_id, complain_description) VALUES (?, ?)";
+  // Insert complaint into the databaseINSERT INTO complain (serviceprovider_id, complain_description)
+  const query = " VALUES (?, ?)";
   db.query(query, [serviceprovider_id, complain_description], (err, result) => {
     if (err) {
       console.error("Error inserting complaint:", err);
@@ -247,7 +255,7 @@ app.delete("/categories/:id", async (req, res) => {
               return res
                 .status(500)
                 .json({ message: "Error deleting category" });
-            }npm 
+            }
             res.json({ message: "Deleted Category" });
           }
         );
@@ -266,7 +274,7 @@ app.get("/categories/:categoryId/subcategories", async (req, res) => {
   const { categoryId } = req.params;
   try {
     db.query(
-      "SELECT * FROM product_sub_category WHERE productcategory_id = ?",
+      "SELECT * FROM product_sub_category WHERE p_cata_id = ?",
       [categoryId],
       (err, results) => {
         if (err) {
@@ -290,8 +298,8 @@ app.post("/categories/:categoryId/subcategories", async (req, res) => {
   const { categoryId } = req.params;
   try {
     db.query(
-      "INSERT INTO product_sub_category (p_sub_cata_name,	p_sub_cata_description, productcategory_id) VALUES (?, ?, ?)",
-      [name, description, categoryId],
+  "INSERT INTO product_sub_category (p_sub_cata_name, p_sub_cata_description, p_cata_id) VALUES (?, ?, ?)",
+  [name, description, categoryId],
       (err, result) => {
         if (err) {
           console.error(err);
@@ -300,7 +308,7 @@ app.post("/categories/:categoryId/subcategories", async (req, res) => {
             .json({ message: "Error creating subcategory" });
         }
         db.query(
-          "SELECT * FROM product_sub_category WHERE productcategory_id = ?",
+          "SELECT * FROM product_sub_category WHERE p_cata_id = ?",
           [result.insertId],
           (err, rows) => {
             if (err) {
@@ -466,46 +474,38 @@ const upload = multer({ storage: storage });
 
 // API Route to Insert Data into MySQL
 app.post("/add-product", upload.single("image"), (req, res) => {
-  const { productName, description, price, quantity, brand, subCategory } = req.body;
+  const {
+    name,
+    description,
+    price,
+    subcategory_id,
+  } = req.body;
 
-  const subCategoryQuery = "SELECT p_sub_cata_id FROM product_sub_category WHERE p_sub_cata_name = ?";
-  db.query(subCategoryQuery, [subCategory], (err, subCategoryRows) => {
+  const image = req.file ? req.file.filename : null;
+
+  const sql = `
+    INSERT INTO product_details (
+      product_name,
+      product_description,
+      product_price,
+      product_image,
+      p_sub_cata_id,
+      long_description
+    ) VALUES (?, ?, ?, ?, ?, ?)
+  `;
+
+  db.query(
+    sql,
+    [name, description, price, image, subcategory_id, description],
+    (err, result) => {
       if (err) {
-          console.error('Subcategory query error:', err);
-          // db.end();
-          return res.status(500).json({ message: 'Internal server error.' });
-      }
-      console.log("subcategoryRows:", subCategoryRows);
-      if (subCategoryRows.length === 0) {
-          // db.end();
-          return res.status(400).json({ message: "Subcategory not found." });
+        console.log("ERROR:", err);
+        return res.status(500).json({ error: err });
       }
 
-      const subCategoryId = subCategoryRows[0].p_sub_cata_id;
-          
-      console.log("subCategoryId:", subCategoryId);
-
-      const insertQuery =
-          "INSERT INTO product_details(product_name, product_description, product_price, product_quantity, product_image, product_BrandName, p_sub_cata_id) VALUES (?, ?, ?, ?, ?, ?, ?)";
-      db.query(insertQuery, [
-          productName,
-          description,
-          price,
-          quantity,
-          req.file.filename,
-          brand,
-          subCategoryId,
-      ], (err) => {
-          if (err) {
-              console.error('Product insert query error:', err);
-              // db.end();
-              return res.status(500).json({ message: 'Internal server error.' });
-          }
-
-          // db.end();
-          res.status(200).json({ message: "Product added successfully." });
-      });
-  });
+      res.json({ success: true });
+    }
+  );
 });
 
 // Multer Storage Configuration
@@ -521,7 +521,18 @@ app.post("/add-product", upload.single("image"), (req, res) => {
 // const upload = multer({ storage: storage });
 
 
+app.get("/api/product/:id", (req, res) => {
+  const id = req.params.id;
 
+  db.query(
+    "SELECT * FROM product_details WHERE product_id = ?",
+    [id],
+    (err, result) => {
+      if (err) return res.status(500).send(err);
+      res.json(result[0]);
+    }
+  );
+});
 
 
 
@@ -548,39 +559,35 @@ app.post("/api/feedback", (req, res) => {
 app.post("/ServiceProviderLogin", (req, res) => {
   const { email, password } = req.body;
 
+  console.log("Login attempt:", email, password);
+
   db.query(
-    "SELECT * FROM service_provider WHERE serviceprovider_email = ?",
+    "SELECT * FROM service_provider WHERE email = ?",
     [email],
     (err, results) => {
       if (err) {
-        console.error("Database error:", err);
-        return res.status(500).json({ success: false, message: "Server Error" });
+        console.error(err);
+        return res.status(500).json({ success: false });
       }
 
       if (results.length === 0) {
-        return res.status(400).json({ success: false, message: "Invalid credentials" });
+        return res.json({ success: false });
       }
 
       const user = results[0];
 
-      // Compare password (In a real app, you should hash passwords)
       if (user.password !== password) {
-        return res.status(400).json({ success: false, message: "Invalid credentials" });
+        return res.json({ success: false });
       }
 
-      // Create a JWT token
-      const token = jwt.sign(
-        { userId: user.serviceprovider_id, userType: "serviceProvider" },
-        "your_jwt_secret",
-        { expiresIn: "1h" }
-      );
-
-      // Return token and serviceprovider_id
-      res.json({ success: true, token, serviceprovider_id: user.serviceprovider_id });
+      res.json({
+        success: true,
+        token: "dummy-token",
+        serviceprovider_id: user.serviceprovider_id
+      });
     }
   );
 });
-
 
 
 
@@ -606,7 +613,7 @@ app.post("/submit-service-complaint", (req, res) => {
     }
 
     // Insert complaint into database
-    const query = "INSERT INTO complain (serviceprovider_id, complain_description) VALUES (?, ?)";
+    const query = "INSERT INTO complain (serviceprovider_id, complain_text) VALUES (?, ?)";
     db.query(query, [serviceprovider_id, message], (err, result) => {
       if (err) {
         console.error("Error inserting complaint:", err);
@@ -789,7 +796,7 @@ app.post("/submit-feedback", (req, res) => {
       }
 
       // Insert feedback into database
-      const query = "INSERT INTO userfeedback (user_id, message) VALUES (?, ?)";
+      const query = `INSERT INTO feedback (customer_id, feedback_text) VALUES (?, ?)`;
       db.query(query, [user_id, feedback], (err, result) => {
           if (err) {
               console.error("Error inserting feedback:", err);
@@ -800,38 +807,42 @@ app.post("/submit-feedback", (req, res) => {
   });
 });
 
+// UPDATE PRODUCT PRICE
+app.put("/api/update-product-price/:id", (req, res) => {
+  const { id } = req.params;
+  const { price } = req.body;
+
+  db.query(
+    "UPDATE product_details SET product_price = ? WHERE product_id = ?",
+    [price, id],
+    (err) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).send("Error updating price");
+      }
+      res.send("Price updated successfully");
+    }
+  );
+}); 
 
 //user complains
 
 
-app.post("/submit-complaint", (req, res) => {
-  const { user_id, message } = req.body;
+app.post("/api/complaint", (req, res) => {
+  const { complain_text } = req.body;
 
-  // Check if required fields are present
-  if (!user_id || !message) {
-    return res.status(400).json({ error: "User ID and Complaint message are required" });
-  }
+  const query = `
+    INSERT INTO complain (customer_id, product_id, complain_text, status)
+    VALUES (?, ?, ?, ?)
+  `;
 
-  // Validate user_id exists in the user table
-  db.query("SELECT * FROM user WHERE user_id = ?", [user_id], (err, result) => {
+  db.query(query, [2, null, complain_text, "pending"], (err, result) => {
     if (err) {
-      console.error("Database error:", err);
-      return res.status(500).json({ error: "Database error" });
+      console.error(err);
+      return res.status(500).json({ message: "Database error" });
     }
 
-    if (result.length === 0) {
-      return res.status(400).json({ error: "Invalid user ID" });
-    }
-
-    // Insert complaint into database
-    const query = "INSERT INTO usercomplain (user_id, message, created_at) VALUES (?, ?, NOW())";
-    db.query(query, [user_id, message], (err, result) => {
-      if (err) {
-        console.error("Error inserting complaint:", err);
-        return res.status(500).json({ error: "Database error" });
-      }
-      res.json({ success: true, message: "Complaint submitted successfully" });
-    });
+    res.json({ message: "Complaint submitted successfully" });
   });
 });
 
@@ -839,77 +850,67 @@ app.post("/submit-complaint", (req, res) => {
 
 
 // Fetch all customer feedback
-app.get("/userfeedbacklist", (req, res) => {
-  const { start_date, end_date } = req.query;
-  let sql = `
-    SELECT userfeedback.id, userfeedback.message, userfeedback.created_at, user.user_name 
-    FROM userfeedback 
-    JOIN user ON userfeedback.user_id = user.user_id 
+
+app.get("/serviceprovider-feedback-list", (req, res) => {
+  const query = `
+    SELECT feedback.feedback_id, feedback.feedback_text, feedback.created_at, user.user_name
+    FROM feedback
+    JOIN user ON feedback.customer_id = user.user_id
+    ORDER BY feedback.created_at DESC
   `;
 
-  const queryParams = [];
-
-  if (start_date && end_date) {
-    sql += ` WHERE userfeedback.created_at BETWEEN ? AND ? `;
-    queryParams.push(start_date, end_date);
-  }
-
-  sql += ` ORDER BY userfeedback.created_at DESC`;
-
-  db.query(sql, queryParams, (err, results) => {
+  db.query(query, (err, result) => {
     if (err) {
-      return res.status(500).json({ success: false, message: "Server Error" });
+      console.log(err);
+      return res.status(500).json({ success: false });
     }
-    res.json({ success: true, feedback: results });
+
+    res.json({ success: true, feedbacks: result });
   });
 });
-
 
 
 
 //fetch all customer comlaints
 app.get("/usercomplainlist", (req, res) => {
-  const { start_date, end_date } = req.query;
-  let query = `
-    SELECT usercomplain.id, usercomplain.message, usercomplain.created_at, user.user_name 
-    FROM usercomplain 
-    JOIN user ON usercomplain.user_id = user.user_id 
+  const sql = `
+    SELECT 
+      complain.complain_id AS id,
+      complain.complain_text AS message,
+      complain.status,
+      complain.created_at,
+      user.user_name AS user_name
+    FROM complain
+    LEFT JOIN user ON complain.customer_id = user.user_id
+    ORDER BY complain.created_at DESC
   `;
 
-  const queryParams = [];
-
-  if (start_date && end_date) {
-    query += ` WHERE usercomplain.created_at BETWEEN ? AND ? `;
-    queryParams.push(start_date, end_date);
-  }
-
-  query += ` ORDER BY usercomplain.created_at DESC`;
-
-  db.query(query, queryParams, (err, results) => {
+  db.query(sql, (err, result) => {
     if (err) {
-      console.error("Error fetching complaints:", err);
+      console.error("DB ERROR:", err);
       return res.status(500).json({ error: "Database error" });
     }
-    res.json({ complaints: results });
+
+    res.json({ complaints: result });
   });
 });
 
+app.put("/update-complaint-status/:id", (req, res) => {
+  const { id } = req.params;
 
+  db.query(
+    "UPDATE complain SET status = 'resolved' WHERE complain_id = ?",
+    [id],
+    (err) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).json({ error: "Database error" });
+      }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+      res.json({ success: true });
+    }
+  );
+});
 
 
 
@@ -960,7 +961,7 @@ app.post("/api/orders", (req, res) => {
 //---------------------------------------------------------------get products in customer side-------------------------------------------
 
 //-------TELIVISION---------------
-app.get('/api/televisions/led', (req, res) => {
+/*app.get('/api/televisions/led', (req, res) => {
   const sql = `
       SELECT product_details.*, product_sub_category.p_sub_cata_name AS subCategoryName
       FROM product_details
@@ -973,6 +974,24 @@ app.get('/api/televisions/led', (req, res) => {
           return res.status(500).json({ error: 'Database error' });
       }
       res.json(results);
+  });
+});*/
+
+app.get('/api/televisions/led', (req, res) => {
+  const sql = `
+    SELECT pd.*
+    FROM product_details pd
+    JOIN product_sub_category psc 
+    ON pd.p_sub_cata_id = psc.p_sub_cata_id
+    WHERE psc.p_sub_cata_id = 3
+  `;
+
+  db.query(sql, (err, results) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ error: 'Database error' });
+    }
+    res.json(results);
   });
 });
 
@@ -1145,4 +1164,152 @@ app.get('/api/refrigerators/sidebyside', (req, res) => {
 
 app.listen(5000, () => {
   console.log("The Server is Running on port 5000..........");
+});
+
+
+//------------RO API----------------------------------
+
+app.get('/api/waterpurifiers', (req, res) => {
+  const sql = `
+    SELECT pd.*
+    FROM product_details pd
+    JOIN product_sub_category psc 
+    ON pd.p_sub_cata_id = psc.p_sub_cata_id
+    WHERE psc.p_sub_cata_name = 'RO Water Purifier'
+  `;
+
+  db.query(sql, (err, results) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ error: 'Database error' });
+    }
+    res.json(results);
+  });
+});
+//------------------complaint delete-------------------
+app.delete("/delete-complaint/:id", (req, res) => {
+  const { id } = req.params;
+
+  db.query("DELETE FROM complaints WHERE id = ?", [id], (err, result) => {
+    if (err) return res.status(500).json({ message: "Delete failed" });
+
+    res.json({ message: "Deleted successfully" });
+  });
+});
+//------------------feedback delete-------------------
+app.delete("/delete-feedback/:id", (req, res) => {
+  const { id } = req.params;
+
+  db.query("DELETE FROM feedback WHERE feedback_id = ?", [id], (err, result) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ message: "Delete failed" });
+    }
+
+    res.json({ message: "Feedback deleted successfully" });
+  });
+});
+
+app.post("/place-order", (req, res) => {
+  const { customer_id, products, total_price, name, email, phone, address, paymentMethod } = req.body;
+
+  if (!products || products.length === 0) {
+    return res.status(400).json({ message: "No products" });
+  }
+
+  const orderGroupId = "ORD-" + Date.now(); // unique order id
+let completed = 0;
+
+products.forEach((item) => {
+  const sql = `
+    INSERT INTO product_order 
+    (order_group_id, customer_id, product_id, quantity, total_price, order_date, name, email, phone, address)
+    VALUES (?, ?, ?, ?, ?, NOW(), ?, ?, ?, ?)
+  `;
+
+  db.query(
+    sql,
+    [
+      orderGroupId, // ✅ SAME ID for all products
+      customer_id,
+      item.product_id,
+      item.quantity,
+      total_price,
+      name,
+      email,
+      phone,
+      address
+    ],
+    async (err) => {
+      if (err) {
+        console.log("DB ERROR:", err);
+        return res.status(500).json({ message: "Insert failed" });
+      }
+
+      completed++;
+
+      if (completed === products.length) {
+        try {
+          await sendOrderEmail({
+            name,
+            email,
+            phone,
+            address,
+            paymentMethod: paymentMethod || "Online",
+            totalAmount: total_price,
+            items: products
+          });
+
+          res.json({ message: "Order placed successfully & email sent" });
+
+        } catch (emailError) {
+          console.log("EMAIL ERROR:", emailError);
+          res.json({ message: "Order placed but email failed" });
+        }
+      }
+    }
+  );
+});
+});
+
+app.get("/get-orders", (req, res) => {
+  const sql = `
+    SELECT 
+  po.order_group_id,
+  po.order_id,
+  po.name,
+  po.email,
+  po.phone,
+  po.address,
+  po.product_id,
+  pd.product_name,
+  pd.product_price,
+  po.quantity,
+  po.total_price,
+  po.order_date
+FROM product_order po
+LEFT JOIN product_details pd 
+ON po.product_id = pd.product_id
+ORDER BY po.order_group_id DESC
+  `;
+
+  db.query(sql, (err, result) => {
+    if (err) {
+      console.log(err);
+      return res.status(500).json({ error: "DB error" });
+    }
+
+    res.json({ orders: result });
+  });
+});
+
+app.delete("/delete-order/:groupId", (req, res) => {
+  db.query(
+    "DELETE FROM product_order WHERE order_group_id = ?",
+    [req.params.groupId],
+    (err) => {
+      if (err) return res.status(500).json(err);
+      res.json({ message: "Deleted" });
+    }
+  );
 });

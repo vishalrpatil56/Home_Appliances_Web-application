@@ -4,7 +4,8 @@ import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import CusHeader from "./CusHeader";
-// import complainImage from "../assets/complain.jpg"; // Update path to your image
+import CusFooter from "./CusFooter";
+//import complainImage from "../assets/complain.jpg"; // Update path to your image
 
 function Cusfeedback() {
   const [feedback, setFeedback] = useState("");
@@ -75,13 +76,7 @@ function Cusfeedback() {
         </Col>
       </Row>
     </Container>
-    <footer className="bg-black text-white text-center py-3">
-     <h4> <p>&copy; 2025 Home Appliance Service. All rights reserved.</p></h4>
-      <p>
-        <a href="/privacy" className="text-white">Privacy Policy</a> |{" "}
-        <a href="/terms" className="text-white">Terms of Service</a>
-      </p>
-    </footer>
+    <CusFooter />
      <ToastContainer />
     </>
   );

@@ -1,89 +1,73 @@
-import React, { useState } from "react";
-import { Container, Row, Col, Form, Button, Image } from "react-bootstrap";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import Header1 from "./Header1";
+import { toast } from "react-toastify";
 
+function SerFeedback() {
+  const [feedbacks, setFeedbacks] = useState([]);
 
-function Serfeedback() {
-    const [feedback, setFeedback] = useState("");
+  useEffect(() => {
+    fetchFeedbacks();
+  }, []);
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        
-        const serviceprovider_id = localStorage.getItem("serviceprovider_id"); // Get logged-in service provider ID
+  const fetchFeedbacks = async () => {
+    try {
+      const res = await axios.get("http://localhost:5000/serviceprovider-feedback-list");
+      setFeedbacks(res.data.feedbacks);
+    } catch (error) {
+      toast.error("Failed to load feedbacks");
+    }
+  };
 
-        if (!serviceprovider_id) {
-            toast.error("You must be logged in to submit feedback!");
-            return;
-        }
+  //  DELETE FUNCTION
+  const deleteFeedback = async (id) => {
+   
 
-        try {
-            const response = await axios.post("http://localhost:5000/submit-serviceprovider-feedback", { serviceprovider_id, feedback });
+    try {
+      await axios.delete(`http://localhost:5000/delete-feedback/${id}`);
+      toast.success("Feedback deleted");
+      fetchFeedbacks();
+    } catch (error) {
+      toast.error("Delete failed");
+    }
+  };
 
-            if (response.data.success) {
-                toast.success("Feedback Submitted Successfully!", { position: "top-center" });
-                setFeedback(""); // Clear input field
-            } else {
-                toast.error("Failed to submit feedback");
-            }
-        } catch (error) {
-            console.error("Error submitting feedback:", error);
-            toast.error("An error occurred. Please try again.");
-        }
-    };
+  return (
+    <div className="container mt-5">
+      <h2>Customer Feedbacks</h2>
 
-    return (
-        <>
-           <Header1/>
-            <Container className="mt-5">
-                <Row className="align-items-center">
-                    {/* Left Side - Image */}
-                    <Col md={6} className="text-center">
-                        <Image 
-                            src="home.png"
-                            alt="Feedback" 
-                            fluid 
-                            style={{ maxWidth: "100%", height: "auto" }}
-                        />
-                    </Col>
+      <table className="table mt-4">
+        <thead>
+          <tr>
+            <th>User</th>
+            <th>Feedback</th>
+            <th>Date</th>
+            <th>Action</th> {/* ✅ NEW COLUMN */}
+          </tr>
+        </thead>
 
-                    {/* Right Side - Form */}
-                    <Col md={6}>
-                        <h2 className="mb-4 fw-bold">SERVICE PROVIDER FEEDBACK :</h2>
-                        <Form onSubmit={handleSubmit}>
-                            <Form.Group className="mb-3">
-                                <Form.Control
-                                    as="textarea"
-                                    rows={3}
-                                    placeholder="Enter Your Feedback"
-                                    value={feedback}
-                                    onChange={(e) => setFeedback(e.target.value)}
-                                    required
-                                />
-                            </Form.Group>
-                            <Button 
-                                variant="primary" 
-                                type="submit" 
-                                style={{ padding: "10px 20px", backgroundColor: "green" }}
-                            >
-                                Submit
-                            </Button>
-                        </Form>
-                    </Col>
-                </Row>
-            </Container>
-            <footer className="bg-black text-white text-center py-3">
-                <h4> <p>&copy; 2025 Home Appliance Service. All rights reserved.</p></h4>
-                <p>
-                    <a href="/privacy" className="text-white">Privacy Policy</a> |{" "}
-                    <a href="/terms" className="text-white">Terms of Service</a>
-                </p>
-            </footer>
-            <ToastContainer />
-        </>
-    );
+        <tbody>
+          {feedbacks.map((f) => (
+            <tr key={f.feedback_id}>
+              <td>{f.user_name}</td>
+              <td>{f.feedback_text}</td>
+              <td>{f.created_at}</td>
+
+              {/*  DELETE BUTTON */}
+              <td>
+                <button
+                  className="btn btn-danger"
+                  onClick={() => deleteFeedback(f.feedback_id)}
+                >
+                  Delete
+                </button>
+              </td>
+
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
 }
 
-export default Serfeedback;
+export default SerFeedback;

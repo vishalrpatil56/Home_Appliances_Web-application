@@ -1,5 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
+import { toast } from "react-toastify";
 import "./Style/Loginpage.css";
 import { Link } from "react-router-dom";
 import Header1 from "./Header1";
@@ -42,11 +43,10 @@ const UserRegistrationPage = () => {
         userEmail,
         password,
       });
-      setSuccess(response.data.message);
+      toast.success("Registration successful!");
       setFormData({ userName: "", userContact: "", userEmail: "", password: "",});
     } catch (err) {
-      setError(err.response?.data?.error || "Registration failed.");
-    }
+      toast.error(err.response?.data?.error || "Registration failed.");    }
   };
 
   return (
@@ -69,8 +69,7 @@ const UserRegistrationPage = () => {
           >
             Create a strong password... 👤🔏
           </h4>
-          {error && <div className="alert alert-danger">{error}</div>}
-          {success && <div className="alert alert-success">{success}</div>}
+        
         </div>
         <div className="login-card">
           <h1 className="title">

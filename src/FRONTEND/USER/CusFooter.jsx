@@ -63,8 +63,8 @@ const CusFooter = () => {
           {/* CUSTOMER CARE */}
           <div className="col-md-3">
             <h6 className="footer-title">CUSTOMER CARE</h6>
-            <p className="footer-contact"><strong>+91 8200221828</strong></p>
-            <p>(Only for TN) <br /> [ Mon to Sat: 10:00 AM To 6:00 PM ]</p>
+            <p className="footer-contact"><strong>+91 8123892151</strong></p>
+            <p> Balaji Enterprise<br /> [ Mon to Sat: 10:00 AM To 6:00 PM ]</p>
             <h6 className="footer-title mt-3">FOLLOW US ON</h6>
             <div className="social-icons">
             <a href="https://facebook.com" className="text-light fs-4">

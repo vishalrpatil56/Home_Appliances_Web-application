@@ -23,22 +23,24 @@ const FeedbackList = () => {
           <thead>
             <tr>
               <th>ID</th>
-              <th>DESCRIPTION</th>
-              <th>ServicProvider_Id</th>
+<th>Feedback</th>
+<th>Customer ID</th>
               <th></th>
             </tr>
           </thead>
-          <tbody>
-            {feedbacks.map((feedback) => (
-              <tr key={feedback.feedback_id}>
-                <td>{feedback.feedback_id}</td>
-                <td>{feedback.feedback_description}</td>
-                <td>{feedback.serviceprovider_id}</td>
-                <td>👍💬 ✅
-                </td>
-              </tr>
-            ))}
-          </tbody>
+        <tbody>
+  {feedbacks.map((f) => (
+    <tr key={f.feedback_id}>
+      <td>{f.feedback_id}</td>
+      <td>{f.feedback_text}</td>
+      <td>{f.customer_id}</td>
+
+      <td>
+        👍 💬 ✅
+      </td>
+    </tr>
+  ))}
+</tbody>
         </table>
       </div>
     </div>

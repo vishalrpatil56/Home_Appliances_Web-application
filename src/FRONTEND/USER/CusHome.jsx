@@ -131,36 +131,40 @@ const CusHome = () => {
 
     {/* Contact Us Section */}
     <Col md={4} className="mb-4 ms-auto slideInRight">
-        <h1 className="fw-bold" style={{fontSize:"50px"}}>Contact us : </h1>
-          <p><b><h3>Balaji Enterprise</h3></b></p>
-          <p>Email: np65925603@gmail.com</p>
-          <p>Phone: +91 9535345080, +91 8123892151</p>
-          <p>Location: Green Park, Nipani</p>
-          <br />
-          
-          {/*<div className="d-flex gap-3 mt-2">
-          <h4> <strong>Follow Us On :           </strong></h4>  
-            
-            <a href="https://facebook.com" className="text-light fs-4">
-              <FaFacebook style={{ color: "blue", fontSize: "40px" }} />
-            </a>
-            <a href="https://instagram.com" className="text-light fs-4">
-            
-              <FaInstagram
-                style={{
-                  fontSize: "40px",
-                  background: "linear-gradient(to right, #8a3abf, #e1306c, #f58529, #f7b731)",
-                  borderRadius: "10px",
-                  display: "inline-block",
-                }}
-              />
-            </a>
-          </div>*/}
-        </Col>
+  <h1 className="fw-bold" style={{ fontSize: "50px" }}>Contact us : </h1>
+
+  <p><b><h3>Balaji Enterprise</h3></b></p>
+  <p>Email: np65925603@gmail.com</p>
+  <p>Phone: +91 9535345080, +91 8123892151</p>
+  <p>Location: Green Park, Nipani</p>
+
+  <br />
+
+  {/* ✅ MOVE CARD HERE */}
+  <div style={{
+    marginTop: "20px",
+    padding: "20px",
+    borderRadius: "12px",
+    background: "#f8fafc",
+    boxShadow: "0 6px 20px rgba(0,0,0,0.05)"
+  }}>
+    <h4 style={{ marginBottom: "10px" }}>🏠 Home Services Available</h4>
+
+    <p style={{ margin: "5px 0" }}>
+      <strong>Technicians:</strong><br />
+      Nilesh Patil, Vikas Patil
+    </p>
+
+    <p style={{ margin: "5px 0" }}>
+      <strong>Contact:</strong><br />
+      8123892151, 7338121244
+    </p>
+  </div>
+
+</Col>
 
    
   </Row>
-
 
 <br /><br /><br /><br /><br /><br />
 
@@ -169,25 +173,91 @@ const CusHome = () => {
    {/* <Col md={4} className="mb-4 support-section"> */}
   <h1 className="fw-bold text-center support-title">Support :</h1>
   <br />
-  <button className="support-btn feedback-btn" onClick={() => navigate("/cusfeedback")}>
-    Give Feedback 🌟💯😊
-  </button>
-  <button className="support-btn complaint-btn" onClick={() => navigate("/cuscomplain")}>
-    Register Complaint
-  </button>
+<div style={{ textAlign: "center", marginTop: "40px" }}>
+  
+
+  <div
+    style={{
+      display: "flex",
+      justifyContent: "center",
+      gap: "30px",
+      flexWrap: "wrap",
+    }}
+  >
+    {/* Feedback Card */}
+    <div
+      onClick={() => navigate("/cusfeedback")}
+      style={{
+        width: "320px",
+        padding: "25px",
+        borderRadius: "14px",
+        background: "#f0fdf4",   // soft green
+        border: "1px solid #bbf7d0",
+        boxShadow: "0 8px 25px rgba(0,0,0,0.06)",
+        cursor: "pointer",
+        transition: "0.3s",
+      }}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.transform = "translateY(-6px)";
+        e.currentTarget.style.boxShadow =
+          "0 15px 30px rgba(34,197,94,0.15)";
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.transform = "translateY(0)";
+        e.currentTarget.style.boxShadow =
+          "0 8px 25px rgba(0,0,0,0.06)";
+      }}
+    >
+      <div style={{ fontSize: "30px", marginBottom: "10px" }}>💬</div>
+      <h3 style={{ marginBottom: "8px", color: "#166534" }}>
+        Give Feedback
+      </h3>
+      <p style={{ color: "#4b5563", fontSize: "14px" }}>
+        Help us improve your experience
+      </p>
+    </div>
+
+    {/* Complaint Card */}
+    <div
+      onClick={() => navigate("/cuscomplain")}
+      style={{
+        width: "320px",
+        padding: "25px",
+        borderRadius: "14px",
+        background: "#fef2f2",   // soft red
+        border: "1px solid #fecaca",
+        boxShadow: "0 8px 25px rgba(0,0,0,0.06)",
+        cursor: "pointer",
+        transition: "0.3s",
+      }}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.transform = "translateY(-6px)";
+        e.currentTarget.style.boxShadow =
+          "0 15px 30px rgba(239,68,68,0.15)";
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.transform = "translateY(0)";
+        e.currentTarget.style.boxShadow =
+          "0 8px 25px rgba(0,0,0,0.06)";
+      }}
+    >
+      <div style={{ fontSize: "30px", marginBottom: "10px" }}>⚠️</div>
+      <h3 style={{ marginBottom: "8px", color: "#991b1b" }}>
+        Register Complaint
+      </h3>
+      <p style={{ color: "#4b5563", fontSize: "14px" }}>
+        Facing an issue? Let us know
+      </p>
+    </div>
+  </div>
+</div>
  
 {/* </Col> */}
 {/* </Col> */}
 
 </Container>
     <br /><br />
-    <footer className="bg-black text-white text-center py-3">
-     <h4> <p>&copy; 2025 Home Appliance Service. All rights reserved.</p></h4>
-      <p>
-        <a href="/privacy" className="text-white">Privacy Policy</a> |{" "}
-        <a href="/terms" className="text-white">Terms of Service</a>
-      </p>
-    </footer>
+     <CusFooter />
    
     </>
   );

@@ -1,81 +1,91 @@
-import React, { useState } from "react";
-import { Container, Row, Col, Form, Button, Image } from "react-bootstrap";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-
-import Header1 from "./Header1";
+import React, { useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import axios from "axios";
 
 function SerComplain() {
-  const [complain, setComplain] = useState("");
+  const [complaints, setComplaints] = useState([]);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const serviceprovider_id = localStorage.getItem("serviceprovider_id"); // Get logged-in Service Provider ID
+  useEffect(() => {
+    fetchComplaints();
+  }, []);
 
-    if (!serviceprovider_id) {
-      toast.error("You must be logged in to submit a complaint!");
-      return;
-    }
-
+  const fetchComplaints = async () => {
     try {
-      const response = await fetch("http://localhost:5000/submit-service-complaint", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ serviceprovider_id, message: complain }),
-      });
-
-      const data = await response.json();
-      if (data.success) {
-        toast.success("Complaint submitted successfully!", { position: "top-center" });
-        setComplain(""); // Clear input field
-      } else {
-        toast.error(data.error);
-      }
+      const res = await axios.get("http://localhost:5000/usercomplainlist");
+      setComplaints(res.data.complaints);
     } catch (error) {
-      toast.error("Failed to submit complaint. Try again later.");
+      toast.error("Failed to load complaints");
+    }
+  };
+
+  const markResolved = async (id) => {
+    try {
+      await axios.put(`http://localhost:5000/update-complaint-status/${id}`);
+      toast.success("Marked as resolved");
+      fetchComplaints();
+    } catch (error) {
+      toast.error("Failed to update complaint");
+    }
+  };
+
+  //  NEW DELETE FUNCTION
+  const deleteComplaint = async (id) => {
+    try {
+      await axios.delete(`http://localhost:5000/delete-complaint/${id}`);
+      toast.success("Complaint deleted");
+      fetchComplaints();
+    } catch (error) {
+      toast.error("Delete failed");
     }
   };
 
   return (
-    <>
-      <Header1/>
-      <Container className="mt-5">
-        <Row className="align-items-center">
-          <Col md={6} className="text-center">
-            <Image src="home.png" alt="Complain" fluid style={{ maxWidth: "100%", height: "auto" }} />
-          </Col>
+    <div className="container mt-5">
+      <h2>Customer Complaints</h2>
 
-          <Col md={6}>
-            <h2 className="mb-4 fw-bold">Service Provider Complaint :</h2>
-            <Form onSubmit={handleSubmit}>
-              <Form.Group className="mb-3">
-                <Form.Control
-                  as="textarea"
-                  rows={3}
-                  placeholder="Enter Your Complaint"
-                  value={complain}
-                  onChange={(e) => setComplain(e.target.value)}
-                  required
-                />
-              </Form.Group>
-              <Button variant="primary" type="submit" style={{ padding: "10px 20px", backgroundColor: "red" }}>
-                Submit
-              </Button>
-            </Form>
-          </Col>
-        </Row>
-      </Container>
-      <footer className="bg-black text-white text-center py-3">
-        <h4> <p>&copy; 2025 Home Appliance Service. All rights reserved.</p> </h4>
-        <p>
-          <a href="/privacy" className="text-white">Privacy Policy</a> | 
-          <a href="/terms" className="text-white"> Terms of Service</a>
-        </p>
-      </footer>
-      <ToastContainer />
-    </>
+      <table className="table mt-4">
+        <thead>
+          <tr>
+            <th>User</th>
+            <th>Complaint</th>
+            <th>Date</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {complaints.map((c) => (
+            <tr key={c.id}>
+              <td>{c.user_name}</td>
+              <td>{c.message}</td>
+              <td>{c.created_at}</td>
+              <td>{c.status}</td>
+
+              {/*  UPDATED ACTION COLUMN */}
+              <td>
+                {c.status !== "resolved" ? (
+                  <button
+                    className="btn btn-success"
+                    onClick={() => markResolved(c.id)}
+                  >
+                    Resolve
+                  </button>
+                ) : (
+                  <button
+                    className="btn btn-danger"
+                    onClick={() => deleteComplaint(c.id)}
+                  >
+                    Delete
+                  </button>
+                )}
+              </td>
+
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 }
 

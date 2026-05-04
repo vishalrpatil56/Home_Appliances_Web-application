@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 
 const ForgotPassword = () => {
@@ -10,11 +11,11 @@ const ForgotPassword = () => {
   const handleResetPassword = (e) => {
     e.preventDefault();
     if (!email) {
-      setError("Please enter your email address.");
+      toast.error("Please enter your email address.");
       return;
     }
     setError("");
-    setMessage("If an account with this email exists, we will send a password reset link.");
+    toast.success("Reset link will be sent if email exists");
     // Simulate the process (you would actually send a request to your backend here)
     setTimeout(() => {
       navigate("/login"); // Redirect to login after the reset process
@@ -43,8 +44,7 @@ const ForgotPassword = () => {
         <h3 className="text-center" style={{ color: "#607d8b" }}>
           Forgot Password
         </h3>
-        {error && <div className="alert alert-danger">{error}</div>}
-        {message && <div className="alert alert-success">{message}</div>}
+        
         <form onSubmit={handleResetPassword}>
           <div className="mb-3">
             <label className="form-label" style={{ color: "#607d8b" }}>

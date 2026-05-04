@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import axios from "axios";
 import { Container, Row, Col, Form, Button, Image } from "react-bootstrap";
 // import Header1 from "./Header1";
 // import Footer from "./Footer";
@@ -10,37 +11,25 @@ import CusFooter from "./CusFooter";
 function Cuscomplain() {
   const [complain, setComplain] = useState("");
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const user_id = localStorage.getItem("user_id"); // Get logged-in user ID
+ const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    if (!user_id) {
-      toast.error("You must be logged in to submit feedback!");
-      return;
-    }
+  try {
+    const response = await axios.post("http://localhost:5000/api/complaint", {
+      complain_text: complain // ✅ FIXED (use complain)
+    });
 
-    try {
-      const response = await fetch("http://localhost:5000/submit-complaint", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ user_id, message: complain }),
-      });
+    console.log("SUCCESS:", response.data);
 
-      const data = await response.json();
-      if (data.success) {
-        toast.success("Complaint submitted successfully!", {
-          position: "top-center",
-        });
-        setComplain(""); // Clear input field
-      } else {
-        toast.error(data.error);
-      }
-    } catch (error) {
-      toast.error("Failed to submit complaint. Try again later.");
-    }
-  };
+    toast.success("Complaint submitted successfully!");
+
+    setComplain(""); // ✅ reset field
+
+  } catch (error) {
+    console.error("ERROR:", error);
+    toast.error("Failed to submit complaint");
+  }
+};
 
   return (
     <>
@@ -83,21 +72,7 @@ function Cuscomplain() {
         </Row>
       </Container>
       {/* <Footer/> */}
-      <footer className="bg-black text-white text-center py-3">
-        <h4>
-          {" "}
-          <p>&copy; 2025 Home Appliance Service. All rights reserved.</p>
-        </h4>
-        <p>
-          <a href="/privacy" className="text-white">
-            Privacy Policy
-          </a>{" "}
-          |{" "}
-          <a href="/terms" className="text-white">
-            Terms of Service
-          </a>
-        </p>
-      </footer>
+      <CusFooter />
         <ToastContainer />
     </>
   );
