@@ -10,7 +10,7 @@ import {
   Font,
 } from "@react-pdf/renderer";
 
-// ✅ Local Font
+//  Local Font
 import Roboto from "../../fonts/Roboto-Regular.ttf";
 
 Font.register({
@@ -123,7 +123,7 @@ const OrdersPDF = ({ order }) => {
             
             {/* LOGO */}
             <Image
-              src="/Untitled design.jpeg"
+              src="http://54.84.125.102:5000/uploads/Untitled design.jpeg"
               style={{
                 width: 80,
                 height: 50,

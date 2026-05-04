@@ -8,7 +8,7 @@ const CustomerList = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:5000/customerslist")
+      .get("http://54.84.125.102:5000/customerslist")
       .then((response) => setCustomers(response.data))
       .catch((error) => console.error("Error fetching customers:", error));
   }, []);
@@ -17,7 +17,7 @@ const CustomerList = () => {
   const deleteCustomer = async (userId) => {
     if (window.confirm("Are you sure?")) {
       try {
-        await axios.delete(`http://localhost:5000/customer/${userId}`);
+        await axios.delete(`http://54.84.125.102:5000/customer/${userId}`);
         setCustomers(
           customers.filter((customer) => customer.user_id !== userId)
         );

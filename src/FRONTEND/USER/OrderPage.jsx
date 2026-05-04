@@ -18,7 +18,7 @@ const Orders = () => {
 
   const fetchOrders = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/get-orders");
+      const res = await axios.get("http://54.84.125.102:5000/get-orders");
       setOrders(res.data.orders);
     } catch (error) {
       console.log(error);
@@ -36,7 +36,7 @@ const Orders = () => {
   const deleteOrder = async (orderId) => {
     try {
       await axios.delete(
-        `http://localhost:5000/delete-order/${orderId}`
+        `http://54.84.125.102:5000/delete-order/${orderId}`
       );
       toast.success("Order deleted successfully!");
       fetchOrders(); // refresh list

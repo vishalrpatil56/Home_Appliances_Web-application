@@ -15,7 +15,7 @@ function WaterPurifier() {
 
   useEffect(() => {
     axios
-      .get("http://localhost:5000/api/waterpurifiers")
+      .get("http://54.84.125.102:5000/api/waterpurifiers")
       .then((res) => {
         setProducts(res.data);
       })
@@ -32,7 +32,7 @@ function WaterPurifier() {
 
     cart.push({
       id: p.product_id,
-      image: `http://localhost:5000/uploads/${p.product_image}`,
+      image: `http://54.84.125.102:5000/uploads/${p.product_image}`,
       name: p.product_name,
       price: p.product_price,
       quantity: 1,
@@ -85,7 +85,7 @@ function WaterPurifier() {
                       style={{ cursor: "pointer" }}
                     >
                       <img
-                        src={`http://localhost:5000/uploads/${p.product_image}`}
+                        src={`http://54.84.125.102:5000/uploads/${p.product_image}`}
                         className="card-img"
                         alt={p.product_name}
                       />

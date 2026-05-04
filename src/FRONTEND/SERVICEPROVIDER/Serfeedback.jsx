@@ -11,7 +11,7 @@ function SerFeedback() {
 
   const fetchFeedbacks = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/serviceprovider-feedback-list");
+      const res = await axios.get("http://54.84.125.102:5000/serviceprovider-feedback-list");
       setFeedbacks(res.data.feedbacks);
     } catch (error) {
       toast.error("Failed to load feedbacks");
@@ -23,7 +23,7 @@ function SerFeedback() {
    
 
     try {
-      await axios.delete(`http://localhost:5000/delete-feedback/${id}`);
+      await axios.delete(`http://54.84.125.102:5000/delete-feedback/${id}`);
       toast.success("Feedback deleted");
       fetchFeedbacks();
     } catch (error) {

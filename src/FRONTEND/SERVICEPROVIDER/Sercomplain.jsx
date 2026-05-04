@@ -11,7 +11,7 @@ function SerComplain() {
 
   const fetchComplaints = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/usercomplainlist");
+      const res = await axios.get("http://54.84.125.102:5000/usercomplainlist");
       setComplaints(res.data.complaints);
     } catch (error) {
       toast.error("Failed to load complaints");
@@ -20,7 +20,7 @@ function SerComplain() {
 
   const markResolved = async (id) => {
     try {
-      await axios.put(`http://localhost:5000/update-complaint-status/${id}`);
+      await axios.put(`http://54.84.125.102:5000/update-complaint-status/${id}`);
       toast.success("Marked as resolved");
       fetchComplaints();
     } catch (error) {
@@ -31,7 +31,7 @@ function SerComplain() {
   //  NEW DELETE FUNCTION
   const deleteComplaint = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/delete-complaint/${id}`);
+      await axios.delete(`http://54.84.125.102:5000/delete-complaint/${id}`);
       toast.success("Complaint deleted");
       fetchComplaints();
     } catch (error) {

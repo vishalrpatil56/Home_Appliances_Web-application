@@ -13,7 +13,7 @@ function CategoryList() {
 
   const fetchCategories = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/categories");
+      const response = await axios.get("http://54.84.125.102:5000/categories");
       setCategories(response.data);
     } catch (error) {
       console.error("Error fetching categories:", error);
@@ -23,7 +23,7 @@ function CategoryList() {
   const handleDelete = async (categoryId) => {
     if (window.confirm("Are you sure you want to delete this category?")) {
       try {
-        await axios.delete(`http://localhost:5000/categories/${categoryId}`);
+        await axios.delete(`http://54.84.125.102:5000/categories/${categoryId}`);
         fetchCategories();
         setSelectedCategoryId(null); // Reset subcategory view
       } catch (error) {

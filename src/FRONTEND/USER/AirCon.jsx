@@ -19,7 +19,7 @@ const AirCon = () => {
     const fetchSplitACs = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:5000/api/airconditioners/split"
+          "http://54.84.125.102:5000/api/airconditioners/split"
         );
         setSplitACProducts(response.data);
       } catch (error) {
@@ -30,7 +30,7 @@ const AirCon = () => {
     const fetchWindowACs = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:5000/api/airconditioners/window"
+          "http://54.84.125.102:5000/api/airconditioners/window"
         );
         setWindowACProducts(response.data);
       } catch (error) {
@@ -46,7 +46,7 @@ const handleAddToCart = (product) => {
     
     const cartItem = {
       id: product.product_id, // Unique ID
-      image: `/AirConditioner/${product.product_image}`, // Full image URL
+      image: `http://54.84.125.102:5000/uploads/${product.product_image}`, // Full image URL
       name: product.product_name,
       description: product.product_description,
       price: product.product_price,
@@ -93,7 +93,7 @@ const handleAddToCart = (product) => {
         style={{ cursor: "pointer" }}
       >
         <img
-          src={`/AirConditioner/${product.product_image}`}
+          src={`http://54.84.125.102:5000/uploads/${product.product_image}`}
           className="card-img"
           alt={product.product_name}
         />
@@ -158,7 +158,7 @@ const handleAddToCart = (product) => {
         style={{ cursor: "pointer" }}
       >
         <img
-          src={`/AirConditioner/${product.product_image}`}
+          src={`http://54.84.125.102:5000/uploads/${product.product_image}`}
           className="card-img"
           alt={product.product_name}
         />

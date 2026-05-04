@@ -20,7 +20,7 @@ const Serviceproviderlogin = () => {
     setError("");
 
     try {
-      const res = await fetch("http://localhost:5000/ServiceProviderLogin", {
+      const res = await fetch("http://54.84.125.102:5000/ServiceProviderLogin", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),

@@ -39,7 +39,7 @@ const CheckOut = () => {
   const handleOnlinePayment = async () => {
     try {
       const res = await axios.post(
-        "http://localhost:5000/api/payment/create-order",
+        "http://54.84.125.102:5000/api/payment/create-order",
         {
           amount: getTotalPrice(),
         }
@@ -56,7 +56,7 @@ const CheckOut = () => {
         handler: async function (response) {
           try {
             // ✅ SAVE ORDER TO DB (FIXED)
-            await axios.post("http://localhost:5000/place-order", {
+            await axios.post("http://54.84.125.102:5000/place-order", {
               customer_id: 1, // replace with logged user if available
                products: cart.map(item => ({
     product_id: item.product_id || item.id,
@@ -136,7 +136,7 @@ const CheckOut = () => {
 
     // ✅ COD / CARD (DIRECT SAVE)
     try {
-      await axios.post("http://localhost:5000/place-order", {
+      await axios.post("http://54.84.125.102:5000/place-order", {
         customer_id: 1,
          products: cart.map(item => ({
     product_id: item.product_id || item.id,

@@ -16,7 +16,7 @@ const CustomerFeedbackList = () => {
   const fetchFeedback = async () => {
     setLoading(true);
     try {
-      let url = "http://localhost:5000/userfeedbacklist";
+      let url = "http://54.84.125.102:5000/userfeedbacklist";
       if (startDate && endDate) {
         url += `?start_date=${startDate}&end_date=${endDate}`;
       }

@@ -15,7 +15,7 @@ function Cuscomplain() {
   e.preventDefault();
 
   try {
-    const response = await axios.post("http://localhost:5000/api/complaint", {
+    const response = await axios.post("http://54.84.125.102:5000/api/complaint", {
       complain_text: complain // ✅ FIXED (use complain)
     });
 
@@ -39,7 +39,7 @@ function Cuscomplain() {
           {/* Left Side - Image */}
           <Col md={6} className="text-center">
             <Image
-              src="home.png"
+              src="http://54.84.125.102:5000/uploads/home.png"
               alt="Complain"
               fluid
               style={{ maxWidth: "100%", height: "auto" }}

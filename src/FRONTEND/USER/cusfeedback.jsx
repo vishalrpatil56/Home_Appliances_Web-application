@@ -21,7 +21,7 @@ function Cusfeedback() {
     }
 
     try {
-        const response = await axios.post("http://localhost:5000/submit-feedback", { user_id, feedback });
+        const response = await axios.post("http://54.84.125.102:5000/submit-feedback", { user_id, feedback });
 
         if (response.data.success) {
             toast.success("Feedback Submitted Successfully!", { position: "top-center" });
@@ -44,7 +44,7 @@ function Cusfeedback() {
         {/* Left Side - Image */}
         <Col md={6} className="text-center">
           <Image 
-            src="home.png"
+            src="http://54.84.125.102:5000/uploads/home.png"
             alt="Complain" 
             fluid 
             style={{ maxWidth: "100%", height: "auto" }}

@@ -19,7 +19,7 @@ const Telivision = () => {
     const fetchLedTelevisions = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:5000/api/televisions/led"
+          "http://54.84.125.102:5000/api/televisions/led"
         );
         setLedProducts(response.data);
       } catch (error) {
@@ -30,7 +30,7 @@ const Telivision = () => {
     const fetchQledTelevisions = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:5000/api/televisions/qled"
+          "http://54.84.125.102:5000/api/televisions/qled"
         );
         setQledProducts(response.data);
       } catch (error) {
@@ -47,7 +47,7 @@ const Telivision = () => {
 
     const cartItem = {
       id: product.product_id, // Unique ID
-      image: `http://localhost:5000/uploads/${product.product_image}`, // Full image URL
+      image: `http://54.84.125.102:5000/uploads/${product.product_image}`, // Full image URL
       name: product.product_name,
       description: product.product_description,
       price: product.product_price,
@@ -95,7 +95,7 @@ const Telivision = () => {
         style={{ cursor: "pointer" }}
       >
         <img
-          src={`/Television/${product.product_image}`}
+          src={`http://54.84.125.102:5000/uploads/${product.product_image}`}
           className="card-img"
           alt={product.product_name}
         />
@@ -160,7 +160,7 @@ const Telivision = () => {
         style={{ cursor: "pointer" }}
       >
         <img
-          src={`/Television/${product.product_image}`}
+          src={`http://54.84.125.102:5000/uploads/${product.product_image}`}
           className="card-img"
           alt={product.product_name}
         />

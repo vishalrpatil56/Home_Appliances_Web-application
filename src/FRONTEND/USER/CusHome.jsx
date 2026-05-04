@@ -16,27 +16,27 @@ import CusFooter from "./CusFooter";
 
 const slides = [
   {
-    image: "Ac.png", // Replace with actual image path
+    image: "http://54.84.125.102:5000/uploads/Ac.png", // Replace with actual image path
     
     //description: "Top And Higher Quality Home Appliances",
   },
   {
-    image: "Machine.png",
+    image: "http://54.84.125.102:5000/uploads/Machine.png",
     
     //description: "Top And Higher Quality Home Appliances",
   },
   {
-    image: "Tv.png",
+    image: "http://54.84.125.102:5000/uploads/Tv.png",
     
     //description: "Top And Higher Quality Home Appliances",
   },
 ];
 const categories = [
-    { name: "Washing Machine", img: "washingmachine.png" , link:"/washing"},
-    { name: "Air Conditioners", img: "air.png",link:"/aircon" },
-    { name: "Refrigrators", img: "ref.png",link:"/fridge" },
-    { name: "Telivisions", img: "tel.png",link:"/telivision" },
-  { name: "RO Water Purifier", img: "ro.png", link:"/waterpurifier" }
+    { name: "Washing Machine", img: "http://54.84.125.102:5000/uploads/washingmachine.png" , link:"/washing"},
+    { name: "Air Conditioners", img: "http://54.84.125.102:5000/uploads/air.png",link:"/aircon" },
+    { name: "Refrigrators", img: "http://54.84.125.102:5000/uploads/ref.png",link:"/fridge" },
+    { name: "Telivisions", img: "http://54.84.125.102:5000/uploads/tel.png",link:"/telivision" },
+  { name: "RO Water Purifier", img: "http://54.84.125.102:5000/uploads/ro.png", link:"/waterpurifier" }
     //  { name: "Irons", img: "iron.png" },
     // { name: "Water Heaters", img: "waterheater.png" },
     // { name: "Mixers", img: "/mixer.png" },

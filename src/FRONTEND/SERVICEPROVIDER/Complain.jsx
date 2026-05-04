@@ -22,7 +22,7 @@ const Complain = () => {
   e.preventDefault();
 
   try {
-    const response = await axios.post("http://localhost:5000/api/complaint", {
+    const response = await axios.post("http://54.84.125.102:5000/api/complaint", {
       complain_text: complaint
     });
 

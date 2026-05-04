@@ -16,7 +16,7 @@ const CustomerComplaintList = () => {
   const fetchComplaints = async () => {
     setLoading(true);
     try {
-      let url = "http://localhost:5000/usercomplainlist";
+      let url = "http://54.84.125.102:5000/usercomplainlist";
       if (startDate && endDate) {
         url += `?start_date=${startDate}&end_date=${endDate}`;
       }

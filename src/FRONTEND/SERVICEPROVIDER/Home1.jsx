@@ -14,7 +14,7 @@ const Home1 = () => {
     <br /><br />
       <div className="fade-in d-flex justify-content-center">
         <img
-          src="/6424688.webp"
+          src="http://54.84.125.102:5000/uploads/6424688.webp"
           alt="Kitchen Appliances"
           className="img-fluid rounded"
           style={{ width: "65%", height: "50%", borderRadius: "15px" }}
@@ -36,7 +36,7 @@ const Home1 = () => {
             <div className="card h-100 border-0">
               <div className="d-flex justify-content-center align-items-center">
                 <img
-                  src="/1721238945-8006.avif"
+                  src="http://54.84.125.102:5000/uploads/1721238945-8006.avif"
                   className="card-img-top"
                   alt="New Electronic Equipment"
                   style={{ width: "80%", height: "auto", borderRadius: "15px" }}
@@ -55,7 +55,7 @@ const Home1 = () => {
             <div className="card h-100 border-0">
               <div className="d-flex justify-content-center align-items-center">
                 <img
-                  src="/repair.webp"
+                  src="http://54.84.125.102:5000/uploads/repair.webp"
                   className="card-img-top"
                   alt="Repair Electronics Equipment"
                   style={{ width: "60%", height: "auto", borderRadius: "15px" }}

@@ -24,7 +24,7 @@ function Admindashboard() {
 
   // ✅ Fetch products
   useEffect(() => {
-    fetch("http://localhost:5000/api/products")
+    fetch("http://54.84.125.102:5000/api/products")
       .then(res => res.json())
       .then(data => setProducts(data))
       .catch(err => console.error(err));
@@ -32,7 +32,7 @@ function Admindashboard() {
 
   // ✅ Delete product
   const handleDelete = async (id) => {
-    await fetch(`http://localhost:5000/api/delete-product/${id}`, {
+    await fetch(`http://54.84.125.102:5000/api/delete-product/${id}`, {
       method: "DELETE"
     });
 
@@ -69,7 +69,7 @@ function Admindashboard() {
 
                 <td>
                   <img
-                    src={`http://localhost:5000/uploads/${p.product_image}`}
+                    src={`http://54.84.125.102:5000/uploads/${p.product_image}`}
                     width="80"
                     alt="product"
                   />

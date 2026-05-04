@@ -8,7 +8,7 @@ const ServiceProviderList = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:5000/serviceproviderslist") // Adjust API endpoint
+      .get("http://54.84.125.102:5000/serviceproviderslist") // Adjust API endpoint
       .then((response) => setServiceProviders(response.data))
       .catch((error) =>
         console.error("Error fetching service providers:", error)
@@ -26,7 +26,7 @@ const ServiceProviderList = () => {
     ) {
       try {
         await axios.delete(
-          `http://localhost:5000/serviceprovider/${serviceProviderId}`
+          `http://54.84.125.102:5000/serviceprovider/${serviceProviderId}`
         );
 
         setServiceProviders((prev) =>

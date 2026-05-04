@@ -16,7 +16,7 @@ function ProductDetails() {
 
   const cartItem = {
     id: product.product_id,
-    image: `http://localhost:5000/uploads/${selectedImage}`, // ✅ FIXED
+    image: `http://54.84.125.102:5000/uploads/${selectedImage}`, // ✅ FIXED
     name: product.product_name,
     description: product.product_description,
     price: product.product_price,
@@ -32,7 +32,7 @@ function ProductDetails() {
 
 useEffect(() => {
   axios
-    .get(`http://localhost:5000/api/product/${id}`)
+    .get(`http://54.84.125.102:5000/api/product/${id}`)
     .then((res) => {
       console.log("DATA:", res.data);
 
@@ -71,7 +71,7 @@ useEffect(() => {
   <img
  src={
   selectedImage
-    ? `http://localhost:5000/uploads/${selectedImage}`
+    ? `http://54.84.125.102:5000/uploads/${selectedImage}`
     : "https://via.placeholder.com/300"
 }
   style={{ width: "300px", borderRadius: "10px" }}
@@ -83,7 +83,7 @@ useEffect(() => {
       product.images.map((img, index) => (
         <img
           key={index}
-          src={`http://localhost:5000/uploads/${img.image_url}`}
+          src={`http://54.84.125.102:5000/uploads/${img.image_url}`}
           style={{
             width: "60px",
             cursor: "pointer",

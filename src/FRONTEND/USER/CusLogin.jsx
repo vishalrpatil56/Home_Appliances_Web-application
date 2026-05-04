@@ -18,7 +18,7 @@ const CusLogin = () => {
     setError("");
 
     try {
-      const response = await axios.post("http://localhost:5000/api/login", {
+      const response = await axios.post("http://54.84.125.102:5000/api/login", {
         email,
         password,
       });

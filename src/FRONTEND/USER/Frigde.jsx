@@ -21,7 +21,7 @@ const Fridge = () => {
     const fetchSingleDoorRefrigerators = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:5000/api/refrigerators/singledoor"
+          "http://54.84.125.102:5000/api/refrigerators/singledoor"
         );
         setSingleDoorProducts(response.data);
       } catch (error) {
@@ -32,7 +32,7 @@ const Fridge = () => {
     const fetchDoubleDoorRefrigerators = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:5000/api/refrigerators/doubledoor"
+          "http://54.84.125.102:5000/api/refrigerators/doubledoor"
         );
         setDoubleDoorProducts(response.data);
       } catch (error) {
@@ -43,7 +43,7 @@ const Fridge = () => {
     const fetchTripleDoorRefrigerators = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:5000/api/refrigerators/tripledoor"
+          "http://54.84.125.102:5000/api/refrigerators/tripledoor"
         );
         setTripleDoorProducts(response.data);
       } catch (error) {
@@ -54,7 +54,7 @@ const Fridge = () => {
     const fetchSideBySideRefrigerators = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:5000/api/refrigerators/sidebyside"
+          "http://54.84.125.102:5000/api/refrigerators/sidebyside"
         );
         setSideBySideProducts(response.data);
       } catch (error) {
@@ -74,7 +74,7 @@ const Fridge = () => {
     const cartItem = {
       id: product.product_id, // Unique ID
       
-      image: `http://localhost:5000/uploads/${product.product_image}`, // Full image URL
+      image: `http://54.84.125.102:5000/uploads/${product.product_image}`, // Full image URL
       name: product.product_name,
       description: product.product_description,
       price: product.product_price,
@@ -122,7 +122,7 @@ const Fridge = () => {
         style={{ cursor: "pointer" }}
       >
         <img
-          src={`/Fridge/${product.product_image}`}
+          src={`http://54.84.125.102:5000/uploads/${product.product_image}`}
           className="card-img"
           alt={product.product_name}
         />
@@ -187,7 +187,7 @@ const Fridge = () => {
         style={{ cursor: "pointer" }}
       >
         <img
-          src={`/Fridge/${product.product_image}`}
+          src={`http://54.84.125.102:5000/uploads/${product.product_image}`}
           className="card-img"
           alt={product.product_name}
         />
@@ -247,7 +247,7 @@ const Fridge = () => {
                     className="card product-card shadow-sm h-100"
                   >
                     <img
-                      src={`http://localhost:5000/uploads/${product.product_image}`}
+                      src={`http://54.84.125.102:5000/uploads/${product.product_image}`}
                       className="card-img"
                       alt={product.product_name}
                       style={{ height: "275px" }}
@@ -303,7 +303,7 @@ const Fridge = () => {
                     className="card product-card shadow-sm h-100"
                   >
                     <img
-                      src={`http://localhost:5000/uploads/${product.product_image}`}
+                      src={`http://54.84.125.102:5000/uploads/${product.product_image}`}
                       className="card-img"
                       alt={product.product_name}
                       style={{ height: "275px" }}

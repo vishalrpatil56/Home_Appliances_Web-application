@@ -41,7 +41,7 @@ const CusFooter = () => {
           <div className="col-md-2">
             <h6 className="footer-title">MY ACCOUNT</h6>
             <ul className="footer-list">
-              <li><a href="">My Account</a></li>
+              <li><a href="#">My Account</a></li>
               <li><a href="#">My Orders</a></li>
               <li><a href="/cart">Cart</a></li>
               {/* <li><a href="#">My Wishlist</a></li>

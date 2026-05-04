@@ -9,7 +9,7 @@ import "./Styles/CusHeader.css";
 
 function CusHeader({ cartCount = 0 }) {
   const [searchTerm, setSearchTerm] = useState("");
-  const navigate = useNavigate;
+ const navigate = useNavigate();
 
   // Handle search and redirect to results page
   const handleSearch = () => {
@@ -38,7 +38,7 @@ function CusHeader({ cartCount = 0 }) {
             <Link to={"/"}>
               {" "}
               <img
-                src="/public/Untitled design.jpeg"
+                src="http://54.84.125.102:5000/uploads/Untitled design.jpeg"
                 alt="logo"
                 className="me-3"
                 style={{ width: "250px", marginLeft: "25px" }}

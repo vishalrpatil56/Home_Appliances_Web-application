@@ -24,7 +24,7 @@ const [formData, setFormData] = useState({
 
   // Load categories
   useEffect(() => {
-    axios.get("http://localhost:5000/categories")
+    axios.get("http://54.84.125.102:5000/categories")
       .then(res => setCategories(res.data))
       .catch(err => console.log(err));
   }, []);
@@ -53,7 +53,7 @@ const [formData, setFormData] = useState({
 
   try {
     const res = await axios.get(
-      `http://localhost:5000/categories/${categoryId}/subcategories`
+      `http://54.84.125.102:5000/categories/${categoryId}/subcategories`
     );
     setSubCategories(res.data);
   } catch (err) {
@@ -74,7 +74,7 @@ const [formData, setFormData] = useState({
     data.append("image", formData.image);
 
     try {
-      await axios.post("http://localhost:5000/add-product", data);
+      await axios.post("http://54.84.125.102:5000/add-product", data);
       toast.success("Product added successfully!");
     } catch (err) {
       toast.error("Error adding product");
@@ -85,7 +85,7 @@ const [formData, setFormData] = useState({
   const searchProduct = async () => {
     try {
       const res = await axios.get(
-        `http://localhost:5000/api/product/${searchId}`
+        `http://54.84.125.102:5000/api/product/${searchId}`
       );
       setProduct(res.data);
     } catch {
@@ -96,7 +96,7 @@ const [formData, setFormData] = useState({
   // UPDATE PRICE
   const updatePrice = async () => {
     await axios.put(
-      `http://localhost:5000/api/update-product-price/${searchId}`,
+      `http://54.84.125.102:5000/api/update-product-price/${searchId}`,
       { price: newPrice }
     );
     toast.info("Price updated successfully!");
@@ -106,7 +106,7 @@ const [formData, setFormData] = useState({
   // DELETE PRODUCT
   const deleteProduct = async () => {
     await axios.delete(
-      `http://localhost:5000/api/delete-product/${searchId}`
+      `http://54.84.125.102:5000/api/delete-product/${searchId}`
     );
     toast.error("Product deleted successfully!");
     setProduct(null);

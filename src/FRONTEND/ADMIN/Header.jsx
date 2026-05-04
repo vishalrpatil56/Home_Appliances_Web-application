@@ -9,7 +9,7 @@ const Header = () => {
       <header className="header">
         <nav className="navbar">
           <img
-            src="Untitled design.jpeg"
+            src="http://54.84.125.102:5000/uploads/Untitled design.jpeg"
             alt="logo"
             className="navbar-logo"
             style={{ width: "250px", marginLeft: "25px", height: "79px" }}

@@ -12,7 +12,7 @@ function Home() {
           
           {/* ONLY IMAGE */}
           <div className="home-image-full">
-            <img src="/6424688.webp" alt="dashboard" />
+            <img src="http://54.84.125.102:5000/uploads/6424688.webp" alt="dashboard" />
           </div>
 
         </div>

@@ -20,7 +20,7 @@ const Mainorders = () => {
 
 const fetchOrders = async () => {
   try {
-    const res = await fetch("http://localhost:5000/get-orders");
+    const res = await fetch("http://54.84.125.102:5000/get-orders");
     const data = await res.json();
 
     // ✅ GROUP BY ORDER ID
@@ -65,7 +65,7 @@ if (o.product_name) {
 
  const deleteOrder = async (orderId) => {
   try {
-    await fetch(`http://localhost:5000/delete-order/${orderId}`, {
+    await fetch(`http://54.84.125.102:5000/delete-order/${orderId}`, {
       method: "DELETE",
     });
 

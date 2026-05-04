@@ -9,7 +9,7 @@ const ComplainList = () => {
   const [Complains, setComplains] = useState([]);
   const [selectedComplain, setSelectedComplain] = useState(null);
 useEffect(() => {
-  axios.get("http://localhost:5000/complainlist")
+  axios.get("http://54.84.125.102:5000/complainlist")
     .then((response) => {
       console.log(response.data); // 👈 VERY IMPORTANT
       setComplains(response.data);
@@ -19,7 +19,7 @@ useEffect(() => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:5000/complainlist")
+      .get("http://54.84.125.102:5000/complainlist")
       .then((response) => setComplains(response.data)) // Updated from setCustomers to setComplains
       .catch((error) => console.error("Error fetching complains:", error));
   }, []);
@@ -31,7 +31,7 @@ const handleDelete = async (id) => {
   console.log("Delete clicked:", id);
 
   try {
-    await axios.delete(`http://localhost:5000/complain/${id}`);
+    await axios.delete(`http://54.84.125.102:5000/complain/${id}`);
     alert("Deleted successfully");
 
     // Refresh data after delete

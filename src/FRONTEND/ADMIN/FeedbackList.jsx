@@ -8,7 +8,7 @@ const FeedbackList = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:5000/feedbacklist")
+      .get("http://54.84.125.102:5000/feedbacklist")
       .then((response) => setFeedbacks(response.data))
       .catch((error) => console.error("Error fetching feedbacks:", error));
   },); 

@@ -35,7 +35,7 @@ const UserRegistrationPage = () => {
     // }
 
     try {
-      const response = await axios.post("http://localhost:5000/api/register", {
+      const response = await axios.post("http://54.84.125.102:5000/api/register", {
         userName,
         userContact,
         userEmail,

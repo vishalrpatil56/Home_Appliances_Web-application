@@ -13,7 +13,7 @@ function SubcategoryList({ categoryId }) {
   const fetchSubcategories = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:5000/categories/${categoryId}/subcategories`
+        `http://54.84.125.102:5000/categories/${categoryId}/subcategories`
       );
       setSubcategories(response.data);
     } catch (error) {
@@ -24,7 +24,7 @@ function SubcategoryList({ categoryId }) {
   const handleDelete = async (subcategoryId) => {
     if (window.confirm("Are you sure you want to delete this subcategory?")) {
       try {
-        await axios.delete(`http://localhost:5000/subcategories/${subcategoryId}`);
+        await axios.delete(`http://54.84.125.102:5000/subcategories/${subcategoryId}`);
         fetchSubcategories(); // Refresh list
       } catch (error) {
         console.error("Error deleting subcategory:", error);

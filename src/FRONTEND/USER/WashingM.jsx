@@ -18,7 +18,7 @@ const WashingM = () => {
     const fetchTopLoadWashingMachines = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:5000/api/washingmachines/topload"
+          "http://54.84.125.102:5000/api/washingmachines/topload"
         );
         setTopLoadProducts(response.data);
       } catch (error) {
@@ -29,7 +29,7 @@ const WashingM = () => {
     const fetchFrontLoadWashingMachines = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:5000/api/washingmachines/frontload"
+          "http://54.84.125.102:5000/api/washingmachines/frontload"
         );
         setFrontLoadProducts(response.data);
       } catch (error) {
@@ -46,7 +46,7 @@ const WashingM = () => {
     
     const cartItem = {
       id: product.product_id, // Unique ID
-      image: `/Washing/${product.product_image}`, // Full image URL
+      image: `http://54.84.125.102:5000/uploads/${product.product_image}`, // Full image URL
       name: product.product_name,
       description: product.product_description,
       price: product.product_price,
@@ -93,7 +93,7 @@ const WashingM = () => {
         style={{ cursor: "pointer" }}
       >
         <img
-          src={`/Washing/${product.product_image}`}
+          src={`http://54.84.125.102:5000/uploads/${product.product_image}`}
           className="card-img"
           alt={product.product_name}
         />
@@ -158,7 +158,7 @@ const WashingM = () => {
         style={{ cursor: "pointer" }}
       >
         <img
-          src={`/Washing/${product.product_image}`}
+          src={`http://54.84.125.102:5000/uploads/${product.product_image}`}
           className="card-img"
           alt={product.product_name}
         />
