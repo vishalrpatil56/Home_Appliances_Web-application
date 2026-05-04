@@ -1313,3 +1313,11 @@ app.delete("/delete-order/:groupId", (req, res) => {
     }
   );
 });
+
+const path = require("path");
+
+app.use(express.static(path.join(__dirname, "../src/FRONTEND/dist")));
+
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "../src/FRONTEND/dist/index.html"));
+});
