@@ -1314,7 +1314,7 @@ app.delete("/delete-order/:groupId", (req, res) => {
   );
 });
 
-const path = require("path");
+
 
 app.use(express.static(path.join(__dirname, "../dist")));
 
