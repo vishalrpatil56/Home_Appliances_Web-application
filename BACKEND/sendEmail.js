@@ -67,18 +67,20 @@ const generateInvoice = (order) => {
     doc.moveDown();
 
     // GST CALCULATION (same as your React PDF)
-    const subtotal = order.totalAmount;
-    const gst = subtotal * 0.18;
-    const cgst = gst / 2;
-    const sgst = gst / 2;
-    const grandTotal = subtotal + gst;
+    const grandTotal = Number(order.totalAmount) || 0;
+
+// Extract GST from total (included GST)
+const gst = grandTotal - (grandTotal / 1.18);
+const cgst = gst / 2;
+const sgst = gst / 2;
+const subtotal = grandTotal - gst;
 
     // TOTAL SECTION
-    doc.text(`Subtotal: ₹${subtotal}`, { align: "right" });
+    doc.text(`Subtotal: ₹${subtotal.toFixed(2)}`, { align: "right" });
     doc.text(`CGST (9%): ₹${cgst.toFixed(2)}`, { align: "right" });
     doc.text(`SGST (9%): ₹${sgst.toFixed(2)}`, { align: "right" });
 
-    doc.fontSize(12).text(`Grand Total: ₹${grandTotal.toFixed(2)}`, {
+    doc.fontSize(12).text(`Grand Total: ₹${Number(grandTotal).toFixed(2)}`, {
       align: "right",
     });
 
@@ -158,7 +160,7 @@ const sendOrderEmail = async (order) => {
 
           </table>
 
-          <h3>Total Amount: ₹${totalAmount}</h3>
+          <h3>Total Amount: ₹${Number(totalAmount).toFixed(2)}</h3>
 
           <p><b>Payment Method:</b> ${paymentMethod}</p>
 
