@@ -12,7 +12,11 @@ const Header = () => {
             src="http://54.84.125.102:5000/uploads/Untitled design.jpeg"
             alt="logo"
             className="navbar-logo"
-            style={{ width: "250px", marginLeft: "25px", height: "79px" }}
+    style={{
+    width: "180px",
+    height: "auto",
+    objectFit: "contain"
+  }}
           />
           <span className="navbar-title">HOME APPLIANCES AND SERVICES</span>
           <ul className="navbar-links">

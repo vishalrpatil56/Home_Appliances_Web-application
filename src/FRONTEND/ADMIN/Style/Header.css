@@ -12,14 +12,19 @@ body {
 
 /* Navbar */
 .header {
-  background: #000000; /* Dark Charcoal Gray */
+  background: #000;
   color: white;
-  padding: 1px 20px;
+  padding: 0 25px;
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%; /* Full width */
+  height: 85px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
   z-index: 1000;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.3);
 }
 
 .navbar {
@@ -171,7 +176,7 @@ body {
   margin-left: 260px; /* Adjust space for sidebar */
   padding: 20px;
   flex: 1;
-  margin-top: 60px; /* Space for navbar */
+  margin-top: 100px; /* Space for navbar */
   transition: all 0.3s ease-in-out;
 }
 

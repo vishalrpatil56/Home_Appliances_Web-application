@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import SubcategoryList from "./SubcategoryList";
 import Header from "./Header";
 import "./Style/CategoryList.css"
 function CategoryList() {
+  
   const [categories, setCategories] = useState([]);
   const [selectedCategoryId, setSelectedCategoryId] = useState(null);
+const navigate = useNavigate();
 
   useEffect(() => {
     fetchCategories();
@@ -50,23 +53,33 @@ function CategoryList() {
               </thead>
               <tbody>
                 {categories.map((category) => (
-                  <tr key={category.productcategory_id}>
-                    <td>{category.productcategory_id}</td>
-                    <td>{category.productcategory_name}</td>
-                    <td>{category.productcategory_description}</td>
+    <tr key={category.p_cata_id}>
+      <td>{category.p_cata_id}</td>
+      <td>{category.p_cata_name}</td>
+      <td>{category.p_cata_description}</td>
                     <td>
                       <button
-                        onClick={() =>
-                          setSelectedCategoryId(category.productcategory_id)
-                        }
-                      >
-                        View Subcategories
-                      </button>
+  className="btn btn-primary"
+  onClick={() =>
+    navigate(`/subcategorylist?categoryId=${category.p_cata_id}`)
+  }
+>
+  View Subcategories
+</button>
                       <button
-                        onClick={() => handleDelete(category.productcategory_id)}
-                      >
-                        Delete
-                      </button>
+  className="btn btn-danger"
+  onClick={() => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this category?"
+    );
+
+    if (confirmDelete) {
+      handleDelete(category.p_cata_id);
+    }
+  }}
+>
+  Delete
+</button>
                     </td>
                   </tr>
                 ))}

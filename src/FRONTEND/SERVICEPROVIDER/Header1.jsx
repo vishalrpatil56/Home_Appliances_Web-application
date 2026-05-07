@@ -5,13 +5,15 @@ import { Link } from "react-router-dom";
 import { Dropdown } from "react-bootstrap";
 import "./Style/Header1.css";
 import { FiLogOut } from "react-icons/fi";
+import { useNavigate } from "react-router-dom";
+
 
 const Header1 = () => {
   const [productDropdown, setProductDropdown] = useState(false);
   const [ordersDropdown, setOrdersDropdown] = useState(false);
   const [complainDropdown, setComplainDropdown] = useState(false);
   const [feedbackDropdown, setFeedbackDropdown] = useState(false);
-
+  const navigate = useNavigate();
   const timeoutRef = useRef(null);
 
   // KEEP DROPDOWN OPEN
@@ -353,6 +355,34 @@ const Header1 = () => {
                     />
                   </Link>
                 </li>
+
+                <li className="nav-item">
+  <button
+    onClick={() => navigate("/Adminpenal")}
+    style={{
+      background: "linear-gradient(135deg, #ff8c00, #ff4500)",
+      border: "none",
+      color: "white",
+      padding: "8px 18px",
+      borderRadius: "30px",
+      fontWeight: "600",
+      cursor: "pointer",
+      transition: "0.3s ease",
+      boxShadow: "0 0 10px rgba(255,140,0,0.5)",
+      marginLeft: "15px",
+    }}
+    onMouseOver={(e) => {
+      e.target.style.transform = "translateY(-2px)";
+      e.target.style.boxShadow = "0 0 18px rgba(255,140,0,0.8)";
+    }}
+    onMouseOut={(e) => {
+      e.target.style.transform = "translateY(0px)";
+      e.target.style.boxShadow = "0 0 10px rgba(255,140,0,0.5)";
+    }}
+  >
+    Admin Login
+  </button>
+</li>
 
               </ul>
             </div>

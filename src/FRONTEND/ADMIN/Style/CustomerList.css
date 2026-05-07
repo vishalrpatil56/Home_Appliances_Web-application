@@ -92,3 +92,37 @@ body {
       width: 100%;
     }
   }
+
+  table tbody tr td {
+  color: black;
+  font-weight: 600;
+  font-size: 16px;
+  background: white;
+  padding: 15px;
+}
+
+table tbody tr {
+  border-bottom: 1px solid #ddd;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+}
+.table-wrapper1 {
+  background: rgba(255,255,255,0.95);
+  padding: 25px;
+  border-radius: 15px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+}
+
+thead {
+  background: linear-gradient(135deg, #007bff, #0056b3);
+  color: white;
+}
+
+th {
+  padding: 18px;
+  font-size: 17px;
+}
