@@ -807,23 +807,54 @@ app.post("/submit-feedback", (req, res) => {
   });
 });
 
-// UPDATE PRODUCT PRICE
-app.put("/api/update-product-price/:id", (req, res) => {
+
+// UPDATE COMPLETE PRODUCT
+app.put("/api/update-product/:id", (req, res) => {
+
   const { id } = req.params;
-  const { price } = req.body;
+
+  const {
+    name,
+    description,
+    long_description,
+    price
+  } = req.body;
+
+  const sql = `
+    UPDATE product_details
+    SET
+      product_name = ?,
+      product_description = ?,
+      long_description = ?,
+      product_price = ?
+    WHERE product_id = ?
+  `;
 
   db.query(
-    "UPDATE product_details SET product_price = ? WHERE product_id = ?",
-    [price, id],
-    (err) => {
+    sql,
+    [
+      name,
+      description,
+      long_description,
+      price,
+      id
+    ],
+    (err, result) => {
+
       if (err) {
         console.error(err);
-        return res.status(500).send("Error updating price");
+        return res.status(500).json({
+          message: "Error updating product"
+        });
       }
-      res.send("Price updated successfully");
+
+      res.json({
+        success: true,
+        message: "Product updated successfully"
+      });
     }
   );
-}); 
+});
 
 //user complains
 
@@ -1230,7 +1261,7 @@ products.forEach((item) => {
   db.query(
     sql,
     [
-      orderGroupId, // ✅ SAME ID for all products
+      orderGroupId, //  SAME ID for all products
       customer_id,
       item.product_id,
       item.quantity,

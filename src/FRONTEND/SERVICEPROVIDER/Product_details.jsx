@@ -20,7 +20,7 @@ const [formData, setFormData] = useState({
 
   const [searchId, setSearchId] = useState("");
   const [product, setProduct] = useState(null);
-  const [newPrice, setNewPrice] = useState("");
+ ;
 
   // Load categories
   useEffect(() => {
@@ -42,7 +42,7 @@ const [formData, setFormData] = useState({
  const handleCategoryChange = async (e) => {
   const categoryId = e.target.value;
 
-  // 🚨 STOP if empty
+  //  STOP if empty
   if (!categoryId) return;
 
   setFormData({
@@ -94,14 +94,25 @@ const [formData, setFormData] = useState({
   };
 
   // UPDATE PRICE
-  const updatePrice = async () => {
+  const updateProduct = async () => {
+  try {
     await axios.put(
-      `http://54.84.125.102:5000/api/update-product-price/${searchId}`,
-      { price: newPrice }
+      `http://54.84.125.102:5000/api/update-product/${searchId}`,
+      {
+        name: product.product_name,
+        description: product.product_description,
+        long_description: product.long_description,
+        price: product.product_price,
+      }
     );
-    toast.info("Price updated successfully!");
+
+    toast.success("Product updated successfully!");
     searchProduct();
-  };
+
+  } catch (err) {
+    toast.error("Update failed");
+  }
+};
 
   // DELETE PRODUCT
   const deleteProduct = async () => {
@@ -186,22 +197,60 @@ const [formData, setFormData] = useState({
 
         {product && (
           <>
-            <p><b>{product.product_name}</b></p>
-            <p>₹{product.product_price}</p>
+            <div className="card p-3 mt-3">
 
-            <input
-              className="form-control mb-2"
-              placeholder="New Price"
-              onChange={(e) => setNewPrice(e.target.value)}
-            />
+  <input
+    className="form-control mb-2"
+    value={product.product_name}
+    onChange={(e) =>
+      setProduct({ ...product, product_name: e.target.value })
+    }
+    placeholder="Product Name"
+  />
 
-            <button className="btn btn-warning me-2" onClick={updatePrice}>
-              Update Price
-            </button>
+  <textarea
+    className="form-control mb-2"
+    value={product.product_description}
+    onChange={(e) =>
+      setProduct({ ...product, product_description: e.target.value })
+    }
+    placeholder="Short Description"
+  />
 
-            <button className="btn btn-danger" onClick={deleteProduct}>
-              Delete
-            </button>
+  <textarea
+    className="form-control mb-2"
+    value={product.long_description}
+    onChange={(e) =>
+      setProduct({ ...product, long_description: e.target.value })
+    }
+    placeholder="Long Description"
+  />
+
+  <input
+    type="number"
+    className="form-control mb-2"
+    value={product.product_price}
+    onChange={(e) =>
+      setProduct({ ...product, product_price: e.target.value })
+    }
+    placeholder="Price"
+  />
+
+  <button
+    className="btn btn-warning me-2"
+    onClick={updateProduct}
+  >
+    Update Product
+  </button>
+
+  <button
+    className="btn btn-danger"
+    onClick={deleteProduct}
+  >
+    Delete
+  </button>
+
+</div>
           </>
         )}
       </div>
