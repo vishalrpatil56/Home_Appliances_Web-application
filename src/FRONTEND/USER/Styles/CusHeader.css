@@ -7,7 +7,26 @@
     padding: 5px 10px;
     width: 50%;
   }
-  
+  .header-tagline {
+  display: inline-block;
+  padding: 8px 20px;
+  font-size: 16px;
+  font-weight: 600;
+  color: white;
+  background: #111;
+  border-radius: 25px;
+  border: 1px solid rgba(255,140,0,0.5);
+
+  /* Soft glow instead of heavy */
+  box-shadow: 0 0 10px rgba(255,140,0,0.4);
+
+  /* Center properly */
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+
   .category-dropdown {
     border: none;
     background: none;

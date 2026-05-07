@@ -14,12 +14,36 @@ function CusHeader({ cartCount = 0 }) {
 
   // Handle search and redirect to results page
   const handleSearch = () => {
-    if (searchTerm.trim()) {
-      navigate(`/search/${searchTerm.trim()}`); // Redirect to the search results page
-    } else {
-      alert("Please enter a search term.");
-    }
-  };
+  const search = searchTerm.toLowerCase().trim();
+
+  if (search.includes("washing")) {
+    navigate("/washing");
+  } 
+  else if (
+    search.includes("ac") ||
+    search.includes("air")
+  ) {
+    navigate("/aircon");
+  } 
+  else if (search.includes("fridge")) {
+    navigate("/fridge");
+  } 
+  else if (
+    search.includes("tv") ||
+    search.includes("television")
+  ) {
+    navigate("/telivision");
+  } 
+  else if (
+    search.includes("water") ||
+    search.includes("purifier")
+  ) {
+    navigate("/waterpurifier");
+  } 
+  else {
+    alert("No matching products found");
+  }
+};
 
   // Trigger search on "Enter" key press
   const handleKeyPress = (e) => {
@@ -32,7 +56,7 @@ function CusHeader({ cartCount = 0 }) {
       <nav className="navbar navbar-expand-lg navbar-dark bg-black">
         <div className="container-fluid">
           <div
-            className="collapse navbar-collapse justify-content-center"
+            className="collapse navbar-collapse"
             id="navbarNav"
           >
             {/* Logo */}
@@ -42,7 +66,11 @@ function CusHeader({ cartCount = 0 }) {
                 src="http://54.84.125.102:5000/uploads/Untitled design.jpeg"
                 alt="logo"
                 className="me-3"
-                style={{ width: "250px", marginLeft: "25px" }}
+                style={{
+  width: "180px",
+  marginLeft: "10px",
+  height: "auto"
+}}
               />
             </Link>
 
@@ -53,7 +81,6 @@ function CusHeader({ cartCount = 0 }) {
                 color: "white",
                 fontSize: "20px",
                 fontWeight: "bold",
-                marginLeft: "140px",
                 textTransform: "uppercase",
                 letterSpacing: "1.5px",
                 padding: "10px 20px",
@@ -61,40 +88,93 @@ function CusHeader({ cartCount = 0 }) {
                 boxShadow: "0 0 15px rgba(255,140,0,0.8)",
                 animation: "pulse 1.5s infinite alternate",
                 transition: "all 0.3s ease-in-out",
+                minWidth: "500px",
+textAlign: "center",
                 cursor: "pointer"
               }}
               onMouseEnter={(e) => {
                 e.target.style.color = "white";
                 e.target.style.boxShadow = "0 0 20px rgba(255,140,0,1)";
-                e.target.style.transform = "scale(1.05)";
+                /*e.target.style.transform = "scale(1.05)";*/
               }}
               onMouseLeave={(e) => {
                 e.target.style.color = "white";
                 e.target.style.boxShadow = "0 0 15px rgba(255,140,0,0.8)";
-                e.target.style.transform = "scale(1)";
+               /* e.target.style.transform = "scale(1)";*/
               }}
             >
               Your Trusted Home Appliance Partner
             </div>
             {/* Search Container */}
-            {/* <div className="search-container">
-              <input
-                type="text"
-                className="search-input"
-                placeholder="Search for products, brands, and more"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                onClick={handleKeyPress} // Search on "Enter" key press
-              />
-              <button className="search-btn" onClick={handleSearch}>
-                <FiSearch />
-              </button>
-            </div> */}
+            
+<div
+  style={{
+    display: "flex",
+    alignItems: "center",
+    backgroundColor: "white",
+    borderRadius: "50px",
+    overflow: "hidden",
+    width: "220px",
+    height: "42px",
+    marginLeft: "80px",
+    boxShadow: "0 0 10px rgba(255,140,0,0.5)",
+    border: "1px solid #ddd",
+  }}
+>
+  <input
+    type="text"
+    placeholder="Search products..."
+    value={searchTerm}
+    onChange={(e) => setSearchTerm(e.target.value)}
+    onKeyDown={handleKeyPress}
+    style={{
+      border: "none",
+      outline: "none",
+      padding: "10px 15px",
+      flex: 1,
+      fontSize: "14px",
+      backgroundColor: "transparent",
+    }}
+  />
+
+  <button
+    onClick={handleSearch}
+    style={{
+      border: "none",
+      backgroundColor: "orangered",
+      color: "white",
+      width: "45px",
+      height: "100%",
+      cursor: "pointer",
+      borderTopRightRadius: "50px",
+borderBottomRightRadius: "50px",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      transition: "0.3s",
+    }}
+    onMouseEnter={(e) => {
+      e.target.style.backgroundColor = "tomato";
+    }}
+    onMouseLeave={(e) => {
+      e.target.style.backgroundColor = "orangered";
+    }}
+  >
+    <FiSearch size={18} />
+  </button>
+</div>
 
             {/* Orders Link */}
 
             {/* Navigation Links */}
-            <ul className="navbar-nav ms-auto">
+            <ul
+  className="navbar-nav ms-auto"
+  style={{
+    display: "flex",
+    alignItems: "center",
+    gap: "5px",
+  }}
+>
               <li className="nav-item">
                 <Link
                   className="nav-link active text-white px-3"
@@ -109,7 +189,7 @@ function CusHeader({ cartCount = 0 }) {
                     margin: "5px",
                     transition:
                       "box-shadow 0.3s ease, background-color 0.3s ease, color 0.3s ease", // Added box-shadow transition
-                    marginRight: "5px",
+                    marginRight: "40px",
                     boxShadow: "0 0 10px rgba(255, 69, 0, 0.8)", // Initial glow
                   }}
                   onMouseEnter={(e) => {

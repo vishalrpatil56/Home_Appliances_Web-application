@@ -125,7 +125,7 @@ function App() {
         <Route path="cusfooter" element={<CusFooter />} />
         <Route path="/" element={<CusLayout />} />
         <Route path="/product/:id" element={<UserProductDetails />} />
-
+    
         <Route path="washing" element={<WashingM />} />
         <Route path="aircon" element={<AirCon />} />
         <Route path="fridge" element={<Fridge />} />

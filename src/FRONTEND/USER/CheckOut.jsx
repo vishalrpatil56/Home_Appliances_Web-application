@@ -26,8 +26,10 @@ const CheckOut = () => {
 
   // ✅ TOTAL PRICE
   const getTotalPrice = () => {
-    return cart.reduce((total, item) => total + item.price, 0);
-  };
+  return cart.reduce((total, item) => {
+    return total + Number(item.price);
+  }, 0);
+};
 
   // ✅ INPUT CHANGE
   const handleChange = (e) => {
@@ -61,7 +63,7 @@ const CheckOut = () => {
                products: cart.map(item => ({
     product_id: item.product_id || item.id,
     name: item.name,
-    price: item.price,
+   price: Number(item.price),
     quantity: item.quantity || 1
   })),
   total_price: getTotalPrice(),
@@ -141,7 +143,7 @@ const CheckOut = () => {
          products: cart.map(item => ({
     product_id: item.product_id || item.id,
     name: item.name,
-    price: item.price,
+    price: Number(item.price),
     quantity: item.quantity || 1
   })),
   total_price: getTotalPrice(),
@@ -248,7 +250,7 @@ const CheckOut = () => {
                 ))}
 
                 <hr />
-                <h5>Total: ₹{getTotalPrice()}</h5>
+                <h5>Total: ₹{getTotalPrice().toFixed(2)}</h5>
               </div>
             </div>
           </div>

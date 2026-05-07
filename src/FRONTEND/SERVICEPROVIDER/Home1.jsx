@@ -107,7 +107,26 @@ const Home1 = () => {
           <p>Phone: +91 9535345080, +91 8123892151</p>
           <p>Location: Green Park, Nipani</p>
           <br />
-          
+          <div style={{
+    marginTop: "20px",
+    padding: "20px",
+    borderRadius: "12px",
+    background: "#f8fafc",
+    boxShadow: "0 6px 20px rgba(0,0,0,0.05)"
+  }}>
+    <h4 style={{ marginBottom: "10px" }}>🏠 Home Services Available</h4>
+
+    <p style={{ margin: "5px 0" }}>
+      <strong>Technicians:</strong><br />
+      Nilesh Patil, Vikas Patil
+    </p>
+
+    <p style={{ margin: "5px 0" }}>
+      <strong>Contact:</strong><br />
+      8123892151, 7338121244
+    </p>
+  </div>
+
           {/*<div className="d-flex gap-3 mt-2">
           <h4> <strong>Follow Us On :           </strong></h4>  
             
