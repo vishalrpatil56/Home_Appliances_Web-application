@@ -860,23 +860,32 @@ app.put("/api/update-product/:id", (req, res) => {
 
 
 app.post("/api/complaint", (req, res) => {
-  const { complain_text } = req.body;
+
+  const { customer_id, complain_text } = req.body;
 
   const query = `
     INSERT INTO complain (customer_id, product_id, complain_text, status)
     VALUES (?, ?, ?, ?)
   `;
 
-  db.query(query, [2, null, complain_text, "pending"], (err, result) => {
-    if (err) {
-      console.error(err);
-      return res.status(500).json({ message: "Database error" });
+  db.query(
+    query,
+    [customer_id, null, complain_text, "pending"],
+    (err, result) => {
+
+      if (err) {
+        console.error(err);
+        return res.status(500).json({
+          message: "Database error"
+        });
+      }
+
+      res.json({
+        message: "Complaint submitted successfully"
+      });
     }
-
-    res.json({ message: "Complaint submitted successfully" });
-  });
+  );
 });
-
 
 
 

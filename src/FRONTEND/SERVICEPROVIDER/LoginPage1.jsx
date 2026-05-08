@@ -28,14 +28,22 @@ const Serviceproviderlogin = () => {
 
       const data = await res.json();
       if (data.success) {
-        toast.success("Login successful!");
-        // Store token, userType, and serviceprovider_id in localStorage
-        localStorage.setItem("authToken", data.token);
-        localStorage.setItem("userType", "serviceProvider");
-        localStorage.setItem("serviceprovider_id", data.serviceprovider_id); // Store serviceprovider_id
-        
-        navigate("/serviceproviderdash");
-      } else {
+
+  toast.success("Login successful!");
+
+  // Store auth data
+  localStorage.setItem("authToken", data.token);
+  localStorage.setItem("userType", "serviceProvider");
+  localStorage.setItem("serviceprovider_id", data.serviceprovider_id);
+
+  // Store logged in user details
+  localStorage.setItem("user", JSON.stringify({
+    username: data.username,
+    email: data.email
+  }));
+
+  navigate("/serviceproviderdash");
+} else {
         toast.error("Invalid credentials. Please try again.");
       }
     } catch (err) {

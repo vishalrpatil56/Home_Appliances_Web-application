@@ -26,6 +26,7 @@ const CusLogin = () => {
       if (response.data.success) {
         localStorage.setItem("token", response.data.token); // Store JWT token
         localStorage.setItem("user_id", response.data.user_id); // Store user ID
+        localStorage.setItem("user_name", response.data.user_name);
         toast.success("Login successful!", { position: "top-center" });
         navigate("/"); // Redirect to dashboard or any page after login
       } else {

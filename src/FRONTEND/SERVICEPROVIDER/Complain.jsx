@@ -18,26 +18,35 @@ const Complain = () => {
   };
 
   // Handle form submission
- const handleSubmit = async (e) => {
+const handleSubmit = async (e) => {
   e.preventDefault();
 
   try {
-    const response = await axios.post("http://54.84.125.102:5000/api/complaint", {
-      complain_text: complaint
-    });
+
+    // Get logged in user id
+    const customer_id = localStorage.getItem("user_id");
+
+    const response = await axios.post(
+      "http://54.84.125.102:5000/api/complaint",
+      {
+        customer_id,
+        complain_text: complaint,
+      }
+    );
 
     console.log("SUCCESS:", response.data);
 
     setIsSubmitted(true);
+
     toast.success("Complaint submitted successfully!");
 
     // Reset form
-    setName('');
-    setEmail('');
     setComplaint('');
 
   } catch (error) {
+
     console.log("ERROR:", error.response);
+
     toast.error("Failed to submit complaint");
   }
 };
