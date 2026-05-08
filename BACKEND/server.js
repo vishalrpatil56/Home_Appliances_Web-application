@@ -1228,13 +1228,28 @@ app.get('/api/waterpurifiers', (req, res) => {
 });
 //------------------complaint delete-------------------
 app.delete("/delete-complaint/:id", (req, res) => {
+
   const { id } = req.params;
 
-  db.query("DELETE FROM complaints WHERE id = ?", [id], (err, result) => {
-    if (err) return res.status(500).json({ message: "Delete failed" });
+  db.query(
+    "DELETE FROM complain WHERE complain_id = ?",
+    [id],
+    (err, result) => {
 
-    res.json({ message: "Deleted successfully" });
-  });
+      if (err) {
+        console.error(err);
+
+        return res.status(500).json({
+          message: "Delete failed"
+        });
+      }
+
+      res.json({
+        success: true,
+        message: "Deleted successfully"
+      });
+    }
+  );
 });
 //------------------feedback delete-------------------
 app.delete("/delete-feedback/:id", (req, res) => {
