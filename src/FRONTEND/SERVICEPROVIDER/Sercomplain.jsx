@@ -56,7 +56,7 @@ function SerComplain() {
 
         <tbody>
           {complaints.map((c) => (
-            <tr key={c.id}>
+            <tr key={c.complain_id}>
               <td>{c.user_name}</td>
               <td>{c.message}</td>
               <td>{c.created_at}</td>
@@ -67,14 +67,14 @@ function SerComplain() {
                 {c.status !== "resolved" ? (
                   <button
                     className="btn btn-success"
-                    onClick={() => markResolved(c.id)}
+                    onClick={() => markResolved(c.complain_id)}
                   >
                     Resolve
                   </button>
                 ) : (
                   <button
                     className="btn btn-danger"
-                    onClick={() => deleteComplaint(c.id)}
+                    onClick={() => deleteComplaint(c.complain_id)}
                   >
                     Delete
                   </button>
