@@ -15,9 +15,15 @@ function Cuscomplain() {
   e.preventDefault();
 
   try {
-    const response = await axios.post("http://54.84.125.102:5000/api/complaint", {
-      complain_text: complain // ✅ FIXED (use complain)
-    });
+    const customer_id = localStorage.getItem("user_id");
+    
+    const response = await axios.post(
+  "http://54.84.125.102:5000/api/complaint",
+  {
+    customer_id,
+    complain_text: complain,
+  }
+);
 
     console.log("SUCCESS:", response.data);
 
